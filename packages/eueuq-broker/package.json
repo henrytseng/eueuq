@@ -1,17 +1,13 @@
 {
-  "name": "eueuq",
+  "name": "eueuq-broker",
   "version": "0.0.2",
-  "description": "A flexible messaging queue with priority handling",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/henrytseng/eueuq.git"
-  },
+  "description": "eueuq message broker",
+  "repository": "https://github.com/henrytseng/eueuq/tree/master/packages/eueuq-broker",
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
   "keywords": [
-    "worker",
-    "consumer",
+    "broker",
     "scheduler",
-    "producer",
+    "provider",
     "job",
     "priority",
     "messaging",
@@ -24,9 +20,5 @@
   "homepage": "https://github.com/henrytseng/eueuq#readme",
   "devDependencies": {
     "lerna": "^2.11.0"
-  },
-  "engines": {
-    "node": ">= 6.x <= 9.x",
-    "npm": ">= 2.x <= 5.x"
   }
 }

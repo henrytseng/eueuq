@@ -1,0 +1,25 @@
+0 silly input [ 'eueuq-core' ]
+1 silly flags { _: [ 'add' ],
+1 silly flags   'reject-cycles': false,
+1 silly flags   rejectCycles: false,
+1 silly flags   dev: false,
+1 silly flags   D: false,
+1 silly flags   scope: 'eueuq-producer',
+1 silly flags   args: [ 'eueuq-core' ] }
+2 verbose rootPath /Users/henry/Gigzolo/projects/eueuq
+3 info version 2.11.0
+4 silly isInitialized
+5 silly isInitialized true
+6 silly existsSync /Users/henry/Gigzolo/projects/eueuq/VERSION
+7 info scope eueuq-producer
+8 error EPACKAGES Errored while collecting packages and package graph
+9 error Error: No packages found that match scope 'eueuq-producer'
+9 error     at Function.filterPackages (/Users/henry/Gigzolo/projects/eueuq/node_modules/lerna/lib/PackageUtilities.js:252:17)
+9 error     at AddCommand.runPreparations (/Users/henry/Gigzolo/projects/eueuq/node_modules/lerna/lib/Command.js:333:60)
+9 error     at /Users/henry/Gigzolo/projects/eueuq/node_modules/lerna/lib/Command.js:209:18
+9 error     at AddCommand.run (/Users/henry/Gigzolo/projects/eueuq/node_modules/lerna/lib/Command.js:193:14)
+9 error     at Object.handler (/Users/henry/Gigzolo/projects/eueuq/node_modules/lerna/lib/commands/AddCommand.js:79:14)
+9 error     at Object.self.runCommand (/Users/henry/Gigzolo/projects/eueuq/node_modules/yargs/lib/command.js:233:22)
+9 error     at Object.Yargs.self._parseArgs (/Users/henry/Gigzolo/projects/eueuq/node_modules/yargs/yargs.js:990:30)
+9 error     at Object.Yargs.self.parse (/Users/henry/Gigzolo/projects/eueuq/node_modules/yargs/yargs.js:532:23)
+9 error     at Object.<anonymous> (/Users/henry/Gigzolo/projects/eueuq/node_modules/lerna/bin/lerna.js:16:25)

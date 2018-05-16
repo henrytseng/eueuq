@@ -17,7 +17,7 @@
     "url": "https://github.com/henrytseng/eueuq/issues"
   },
   "homepage": "https://github.com/henrytseng/eueuq#readme",
-  "devDependencies": {
-    "lerna": "^2.11.0"
+  "dependencies": {
+    "eueuq-core": "^0.0.2"
   }
 }

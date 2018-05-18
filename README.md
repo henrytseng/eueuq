@@ -1,5 +1,5 @@
 # eueuq
 
-> A flexible messaging queue with priority handling designed for large scale deployments.  
+> A flexible messaging queue with priority
 
 Work in progress.

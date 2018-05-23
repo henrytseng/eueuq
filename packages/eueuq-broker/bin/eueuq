@@ -2,4 +2,4 @@
 
 const url = process.env.EUEUQ_BROKER_URI || 'eueuq://localhost:5031'
 const topics = process.env.EUEUQ_BROKER_TOPICS || '*'
-require('../index')(url, topics).start()
+require('../index')(url, topics).listen()

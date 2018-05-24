@@ -5,6 +5,10 @@
   "repository": "https://github.com/henrytseng/eueuq/tree/master/packages/eueuq-core",
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
   "main": "./index",
+  "scripts": {
+    "lint": "node_modules/.bin/eslint lib",
+    "test": "node_modules/.bin/jest"
+  },
   "keywords": [
     "core",
     "worker",

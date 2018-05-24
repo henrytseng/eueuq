@@ -3,6 +3,9 @@
 const crypto = require('crypto')
 const debug = require('debug')('eueuq:core')
 
+/**
+ * Serializer
+ */
 class Serializer {
   constructor() {
     this.algorithm = 'aes-256-ctr'
@@ -19,6 +22,12 @@ class Serializer {
     }
   }
 
+  /**
+   * Encodes data to encrypted serialized payload
+   *
+   * @param  {Object} decrypted A decrypted object
+   * @return {String}           A serialized encrypted String
+   */
   encode(decrypted) {
     let payload = JSON.stringify(decrypted)
     let cipher = crypto.createCipher(this.algorithm, this._getCipherKey())
@@ -27,6 +36,12 @@ class Serializer {
     return encrypted
   }
 
+  /**
+   * Decodes serialized payload to original data
+   *
+   * @param  {String} encrypted A serialized encrypted String
+   * @return {Object}           A decrypted object
+   */
   decode(encrypted) {
     let decipher = crypto.createDecipher(this.algorithm, this._getCipherKey())
     let decrypted = decipher.update(encrypted, 'hex', 'utf8')

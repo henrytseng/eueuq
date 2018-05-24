@@ -14,19 +14,16 @@ const shutdownManager = require('eueuq-core').shutdownManager
 
 /**
  * Message broker
- *
- * @param       {String} uri    A service URI
- * @param       {Array}  topics A list of strings
- * @constructor
  */
 class Broker {
 
   /**
    * Constructor
    *
-   * @param {[type]} connectionUri [description]
+   * @param {String} connectionUri A connection URI value
    */
-  constructor(connectionUri) {
+  constructor(connectionUri, config) {
+    this._config = config || {}
     this._uri = connectionUri
     this._server = null
   }
@@ -54,16 +51,15 @@ class Broker {
   /**
    * Perform an action
    *
-   * @param  {Object} data A data Object payload describing an action
-   * @return               A data Object sent
+   * @param  {Object} message A data Object payload describing an action
+   * @return                  A data Object sent
    */
-  perform(data) {
-    let _data = Object.assign({}, data)
-
-
-
-    let _action = new Action(data)
-    return _action
+  perform(message) {
+    let _message = Object.assign({}, message)
+    _message._id = uuidv1()
+    _message._sentAt = new Date()
+    let _action = Action.createWithMessage(_message).execute()
+    return _message
   }
 
   /**

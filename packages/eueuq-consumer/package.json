@@ -4,6 +4,11 @@
   "description": "eueuq message consumer",
   "repository": "https://github.com/henrytseng/eueuq/tree/master/packages/eueuq-consumer",
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
+  "main": "./index",
+  "scripts": {
+    "lint": "node_modules/.bin/eslint lib",
+    "test": "node_modules/.bin/jest"
+  },
   "keywords": [
     "worker",
     "consumer",

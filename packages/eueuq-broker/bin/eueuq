@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
-const url = process.env.EUEUQ_BROKER_URI || 'eueuq://localhost:5031'
-const topics = process.env.EUEUQ_BROKER_TOPICS || '*'
 const Broker = require('../lib/broker')
 
-var broker = new Broker(url, topics)
+const uri = process.env.EUEUQ_BROKER_URI || 'eueuq://localhost:5031'
+const cipherKey = process.env.EUEUQ_CIPHER_KEY
+
+var broker = new Broker(uri, {
+  cipherKey
+})
 broker.listen()

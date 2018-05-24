@@ -8,8 +8,9 @@ const uuidv1 = require('uuid/v1')
 const net = require('net')
 const debug = require('debug')('eueuq:broker')
 
-const Action = require('./action')
-const Channel = require('./channel')
+const Action = require('eueuq-core').Action
+const Channel = require('eueuq-core').Channel
+const shutdownManager = require('eueuq-core').shutdownManager
 
 /**
  * Message broker
@@ -18,58 +19,68 @@ const Channel = require('./channel')
  * @param       {Array}  topics A list of strings
  * @constructor
  */
-function Broker(uri, topics) {
-  let _resource = new URL(uri)
-  let _port = _resource.port
-  let _server
-  let _attemptedShutdown = 0
+class Broker {
 
-  // Instance
-  return {
+  /**
+   * Constructor
+   *
+   * @param {[type]} connectionUri [description]
+   */
+  constructor(connectionUri) {
+    this._uri = connectionUri
+    this._server = null
+  }
 
-    /**
-     * Start service
-     *
-     * @return {Broker} [description]
-     */
-    listen() {
-      debug(`Listening on port ${_port}`)
-      if(!_server) {
-        _server = net.createServer(Channel.createIncoming()).listen(_port)
-        _attemptedShutdown = 0
-        process.on('SIGINT', () => this.close())
-      }
-    },
+  /**
+   * Internal method to get port
+   *
+   * @return {String} A port number
+   */
+  _getPort() {
+    return this._port = this._port || (new URL(this._uri).port)
+  }
 
-    /**
-     * Perform an action
-     *
-     * @param  {Object} data A data Object payload describing an action
-     * @return               A data Object sent
-     */
-    perform: (data) => {
-      let _data = Object.assign({}, data)
-      let _action = Action.create(data)
-      return _action
-    },
+  /**
+   * Start service
+   */
+  listen() {
+    debug(`Listening on port ${this._getPort()}`)
+    if(!this._server) {
+      this._server = net.createServer(Channel.createIncoming()).listen(this._getPort())
+      shutdownManager.on('attempted', () => { this._server.close() })
+    }
+  }
 
-    /**
-     * Close connection
-     */
-    close() {
-      _attemptedShutdown++
-      if(_attemptedShutdown > 1) {
-        debug('Force shutdown')
-        process.exit(1)
-      }
+  /**
+   * Perform an action
+   *
+   * @param  {Object} data A data Object payload describing an action
+   * @return               A data Object sent
+   */
+  perform(data) {
+    let _data = Object.assign({}, data)
 
-      if(_server) {
-        debug('Disconnecting')
-        _server.close()
-        _server = null
-      } else {
-        debug('Unable able to close; not listening')
-      }
+
+
+    let _action = new Action(data)
+    return _action
+  }
+
+  /**
+   * Close connection
+   */
+  close() {
+    _attemptedShutdown++
+    if(_attemptedShutdown > 1) {
+
+    }
+
+    if(_server) {
+      debug('Disconnecting')
+      _server.close()
+      _server = null
+    } else {
+      debug('Unable able to close; not listening')
     }
   }
 }

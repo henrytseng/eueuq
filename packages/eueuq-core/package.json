@@ -4,6 +4,7 @@
   "description": "eueuq message core",
   "repository": "https://github.com/henrytseng/eueuq/tree/master/packages/eueuq-core",
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
+  "main": "./index",
   "keywords": [
     "core",
     "worker",
@@ -19,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/henrytseng/eueuq/issues"
   },
-  "homepage": "https://github.com/henrytseng/eueuq#readme"
+  "homepage": "https://github.com/henrytseng/eueuq#readme",
+  "dependencies": {
+    "hiredis": "^0.5.0",
+    "jest": "^22.4.4",
+    "redis": "^2.8.0"
+  }
 }

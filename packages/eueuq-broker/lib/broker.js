@@ -47,7 +47,7 @@ class Broker {
     debug(`Listening on port ${this._getPort()}`)
     if(!this._server) {
       this._server = net.createServer(Channel.createIncoming()).listen(this._getPort())
-      shutdownManager.on('attempted', () => { this._server.close() })
+      shutdownManager.on('attempted', () => { this.close() })
     }
   }
 
@@ -70,15 +70,10 @@ class Broker {
    * Close connection
    */
   close() {
-    _attemptedShutdown++
-    if(_attemptedShutdown > 1) {
-
-    }
-
-    if(_server) {
+    if(this._server) {
       debug('Disconnecting')
-      _server.close()
-      _server = null
+      this._server.close()
+      this._server = null
     } else {
       debug('Unable able to close; not listening')
     }

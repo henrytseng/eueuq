@@ -1,6 +1,6 @@
 'use strict';
 
-const Serializer = require(`${process.cwd()}/lib/serializer`);
+const Serializer = require('../../lib/serializer');
 
 test('get random cipher key fallback default', () => {
   let serializer = new Serializer();

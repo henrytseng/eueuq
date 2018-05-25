@@ -9,6 +9,7 @@
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
   "scripts": {
     "start": "packages/eueuq-broker/bin/eueuq",
+    "test": "node_modules/.bin/jest packages/*/test",
     "lint": "node_modules/.bin/eslint packages"
   },
   "keywords": [
@@ -26,10 +27,10 @@
     "url": "https://github.com/henrytseng/eueuq/issues"
   },
   "homepage": "https://github.com/henrytseng/eueuq#readme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^4.19.1",
+    "jest": "^23.0.0",
     "lerna": "^2.11.0"
   },
   "engines": {

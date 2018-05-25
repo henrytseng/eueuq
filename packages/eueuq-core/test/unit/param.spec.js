@@ -1,6 +1,6 @@
 'use strict';
 
-const params = require(`${process.cwd()}/lib/param`);
+const params = require('../../lib/param');
 
 test('value equivalency', () => {
   expect(params({ abc: 1, def: 2 })).toEqual({ abc: 1, def: 2 });

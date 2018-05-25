@@ -8,7 +8,7 @@ const debug = require('debug')('eueuq:core');
  */
 class Serializer {
   constructor() {
-    this.algorithm = 'aes-256-ctr';
+    this.algorithm = 'aes-256-ecb';
   }
 
   _getCipherKey() {

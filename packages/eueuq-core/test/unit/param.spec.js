@@ -25,3 +25,11 @@ test('missing property allowed when permitted', () => {
   let parametrizedData = params(data).permit('def');
   expect(parametrizedData).toEqual({ def: 2 });
 });
+
+test('missing properties can be parametrized multiple times', () => {
+  let data = { abc: 1, def: 2, foo: 'bar' };
+  let parametrizedData = params(data)
+    .permit('def')
+    .permit('foo');
+  expect(parametrizedData).toEqual({ def: 2, foo: 'bar' });
+});

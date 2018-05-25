@@ -1,6 +1,6 @@
 'use strict';
 
-class ActionError {
+class ActionError extends Error {
 
 }
 

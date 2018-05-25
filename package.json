@@ -10,7 +10,7 @@
   "scripts": {
     "start": "packages/eueuq-broker/bin/eueuq",
     "test": "node_modules/.bin/jest packages/*/test",
-    "lint": "node_modules/.bin/eslint packages"
+    "lint": "node_modules/.bin/eslint packages/*/lib/**/*.js packages/*/test/**/*.js"
   },
   "keywords": [
     "worker",

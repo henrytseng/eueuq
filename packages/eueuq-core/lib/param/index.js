@@ -42,7 +42,9 @@ function params(data) {
       enumerable: false,
       value: (name) => {
         _permittedList.push(name);
-        return parameterize(R.pick(_permittedList, data));
+        return parameterize(
+          R.pick(_permittedList, data)
+        );
       }
     });
 

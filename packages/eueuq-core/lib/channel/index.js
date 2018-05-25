@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**
  * Module dependencies
@@ -6,7 +6,7 @@
 
 function Channel() {
   return {
-  }
+  };
 }
 
 /**
@@ -14,6 +14,6 @@ function Channel() {
  */
 Channel.createIncoming = function() {
 
-}
+};
 
-module.exports = Channel
+module.exports = Channel;

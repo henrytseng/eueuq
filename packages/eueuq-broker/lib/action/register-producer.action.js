@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const Action = require('eueuq-core').Action
+const Action = require('eueuq-core').Action;
 
 /**
  * Signals registration of producer to broker
@@ -17,4 +17,4 @@ class RegisterProducerAction extends Action {
   }
 }
 
-module.exports = RegisterProducerAction
+module.exports = RegisterProducerAction;

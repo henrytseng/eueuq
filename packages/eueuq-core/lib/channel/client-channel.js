@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**
  * Module dependencies
@@ -6,7 +6,7 @@
 
 function ClientChannel() {
   return {
-  }
+  };
 }
 
-module.exports = ClientChannel
+module.exports = ClientChannel;

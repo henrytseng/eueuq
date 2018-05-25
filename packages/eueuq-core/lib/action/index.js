@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**
  * Module dependencies
@@ -9,7 +9,7 @@ function Action() {
     execute: () => {
 
     }
-  }
+  };
 }
 
-module.exports = Action
+module.exports = Action;

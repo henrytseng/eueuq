@@ -45,7 +45,7 @@
     "no-unexpected-multiline": 2,
     "no-unreachable": 1,
     "no-with": 2,
-    "semi": [2, "never"],
+    "semi": 2,
     "use-isnan": 2,
     "valid-typeof": 2,
     "wrap-iife": [2, "any"]

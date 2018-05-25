@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const Action = require('eueuq-core').Action
+const Action = require('eueuq-core').Action;
 
 /**
  * Signals completion of task
@@ -17,4 +17,4 @@ class CompleteAction extends Action {
   }
 }
 
-module.exports = CompleteAction
+module.exports = CompleteAction;

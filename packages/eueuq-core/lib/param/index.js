@@ -1,12 +1,12 @@
-'use strict'
+'use strict';
 
 /**
  * Module dependencies
  */
-const R = require('ramda')
+const R = require('ramda');
 
-const _requireSymbol = Symbol('require')
-const _permitSymbol = Symbol('permit')
+const _requireSymbol = Symbol('require');
+const _permitSymbol = Symbol('permit');
 
 /**
  *
@@ -14,8 +14,8 @@ const _permitSymbol = Symbol('permit')
  * @return {Object}      A parametrized data Object
  */
 function params(data) {
-  let _permittedList = []
-  let _data = Object.assign({}, data)
+  let _permittedList = [];
+  let _data = Object.assign({}, data);
 
   /**
    * Throws an error when required parameter is not available
@@ -27,11 +27,11 @@ function params(data) {
     enumerable: false,
     value: (name) => {
       if(!data.hasOwnProperty(name)) {
-        throw new Error('A required parameter is missing')
+        throw new Error('A required parameter is missing');
       }
-      return _data
+      return _data;
     }
-  })
+  });
 
   /**
    * Allows a parameter
@@ -42,12 +42,12 @@ function params(data) {
   Object.defineProperty(_data, 'permit', {
     enumerable: false,
     value: (name) => {
-      _permittedList.push(name)
-      return R.pick(_permittedList, _data)
+      _permittedList.push(name);
+      return R.pick(_permittedList, _data);
     }
-  })
+  });
 
-  return _data
+  return _data;
 }
 
-module.exports = params
+module.exports = params;

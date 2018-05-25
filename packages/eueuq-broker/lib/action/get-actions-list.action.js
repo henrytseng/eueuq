@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const Action = require('eueuq-core').Action
+const Action = require('eueuq-core').Action;
 
 /**
  * Signals adding to queue
@@ -17,4 +17,4 @@ class GetActionsListAction extends Action {
   }
 }
 
-module.exports = GetActionsListAction
+module.exports = GetActionsListAction;

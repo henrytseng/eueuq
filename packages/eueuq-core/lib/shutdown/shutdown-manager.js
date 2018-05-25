@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
-const EventEmitter = require('events')
-const debug = require('debug')('eueuq:core')
+const EventEmitter = require('events');
+const debug = require('debug')('eueuq:core');
 
 /**
  * Builds an instance of shutdown manager
@@ -9,8 +9,8 @@ const debug = require('debug')('eueuq:core')
  * @return {EventEmitter} A broadcaster for shutdown event request
  */
 function getInstance() {
-  let _attemptedShutdown = 0
-  let _emitter = new EventEmitter()
+  let _attemptedShutdown = 0;
+  let _emitter = new EventEmitter();
 
   // Static instance
   let _instance = {
@@ -19,12 +19,12 @@ function getInstance() {
      * Request shutdown
      */
     attempt: () => {
-      _attemptedShutdown++
+      _attemptedShutdown++;
       if(_attemptedShutdown === 1) {
-        debug('Attempting shutdown')
-        _emitter.emit('attempted')
+        debug('Attempting shutdown');
+        _emitter.emit('attempted');
       } else {
-        _instance.force()
+        _instance.force();
       }
     },
 
@@ -32,16 +32,16 @@ function getInstance() {
      * Forces a shutdown
      */
     force: () => {
-      debug('Shutdown forced')
-      _emitter.emit('forced')
-      process.exit(1)
+      debug('Shutdown forced');
+      _emitter.emit('forced');
+      process.exit(1);
     }
-  }
+  };
 
   // Register events
-  process.on('SIGINT', _instance.attempt)
+  process.on('SIGINT', _instance.attempt);
 
-  return _emitter
+  return _emitter;
 }
 
-module.exports = getInstance()
+module.exports = getInstance();

@@ -7,6 +7,10 @@
     "url": "git+ssh://git@github.com/henrytseng/eueuq.git"
   },
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
+  "scripts": {
+    "start": "packages/eueuq-broker/bin/eueuq",
+    "lint": "node_modules/.bin/eslint packages"
+  },
   "keywords": [
     "worker",
     "consumer",
@@ -22,7 +26,10 @@
     "url": "https://github.com/henrytseng/eueuq/issues"
   },
   "homepage": "https://github.com/henrytseng/eueuq#readme",
+  "dependencies": {
+  },
   "devDependencies": {
+    "eslint": "^4.19.1",
     "lerna": "^2.11.0"
   },
   "engines": {

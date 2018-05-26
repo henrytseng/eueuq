@@ -5,7 +5,7 @@
     "jest": true
   },
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 2017
   },
   "rules": {
     "block-scoped-var": 2,

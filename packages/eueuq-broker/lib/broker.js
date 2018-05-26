@@ -9,7 +9,7 @@ const net = require('net');
 const debug = require('debug')('eueuq:broker');
 
 const Action = require('eueuq-core').Action;
-const Channel = require('eueuq-core').Channel;
+const ChannelFactory = require('eueuq-core').ChannelFactory;
 const shutdownManager = require('eueuq-core').shutdownManager;
 
 /**
@@ -26,6 +26,7 @@ class Broker {
     this._config = config || {};
     this._uri = connectionUri;
     this._server = null;
+    this._createService = ChannelFactory.buildCreateMethod(this, 'service');
   }
 
   /**
@@ -43,7 +44,7 @@ class Broker {
   listen() {
     debug(`Listening on port ${this._getPort()}`);
     if(!this._server) {
-      this._server = net.createServer(Channel.createIncoming()).listen(this._getPort());
+      this._server = net.createServer(this._createService).listen(this._getPort());
       shutdownManager.on('attempted', () => { this.close(); });
     }
   }

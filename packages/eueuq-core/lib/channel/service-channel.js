@@ -4,9 +4,8 @@
  * Module dependencies
  */
 
-function ServiceChannel() {
-  return {
-  };
+class ServiceChannel {
+  
 }
 
 module.exports = ServiceChannel;

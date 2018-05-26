@@ -3,6 +3,6 @@
 module.exports = {
   Action: require('./lib/action'),
   Response: require('./lib/response'),
-  Channel: require('./lib/channel'),
+  ChannelFactory: require('./lib/channel/channel-factory'),
   shutdownManager: require('./lib/shutdown/shutdown-manager')
 };

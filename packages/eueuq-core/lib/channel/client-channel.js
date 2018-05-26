@@ -4,9 +4,8 @@
  * Module dependencies
  */
 
-function ClientChannel() {
-  return {
-  };
+class ClientChannel {
+  
 }
 
 module.exports = ClientChannel;

@@ -4,7 +4,7 @@
  * Module dependencies
  */
 
-class Response {
+class Acknowledge {
 }
 
-module.exports = Response;
+module.exports = Acknowledge;

@@ -3,9 +3,17 @@
 /**
  * Module dependencies
  */
+const Channel = require('./index');
 
-class ServiceChannel {
-  
+class ServiceChannel extends Channel {
+
+  /**
+   * Send message
+   */
+  send() {
+
+  }
+
 }
 
 module.exports = ServiceChannel;

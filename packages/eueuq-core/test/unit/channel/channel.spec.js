@@ -9,6 +9,6 @@ test('registers a socket connection', () => {
     on: sinon.spy()
   };
 
-  channel._registerSocket()(socket);
+  channel._open()(socket);
   expect(socket.on.callCount).toBe(3);
 });

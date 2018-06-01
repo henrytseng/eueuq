@@ -3,9 +3,10 @@
 /**
  * Module dependencies
  */
+const uuidv1 = require('uuid/v1');
 const debug = require('debug')('eueuq:core');
 
-const EOL = "\n";
+const DEFAULT_EOL = "\n";
 
 /**
  * Channel
@@ -16,13 +17,10 @@ class Channel {
    * Constructor
    *
    * @param {Broker} service A broker
-   * @param {String} type    A channel type
    */
-  constructor(service, type) {
+  constructor(service) {
     this._service = service;
-    this._type = type;
-    this.id = null;
-    this.direction = null;
+    this.id = uuidv1();
   }
 
   /**
@@ -30,7 +28,7 @@ class Channel {
    *
    * @return {Function} A handler function(socket) to which registers received socket
    */
-  _registerSocket() {
+  _open() {
     let _channel = this;
 
     /**
@@ -54,9 +52,9 @@ class Channel {
         let completedList;
 
         // Limit looping for debugging
-        for(k=0; (i=nextBuf.indexOf(EOL, 'utf8')) !== -1; k++) {
+        for(k=0; (i=nextBuf.indexOf(Channel.EOL, 'utf8')) !== -1; k++) {
           lastBuf = nextBuf.slice(0, i);
-          nextBuf = nextBuf.slice(i + EOL.length);
+          nextBuf = nextBuf.slice(i + Channel.EOL.length);
 
           // Finish last
           debug(`[${this.id}] Message collected`);
@@ -71,13 +69,22 @@ class Channel {
       });
       socket.on('error', (err) => {
         debug(`[${this.id}] Encountered error: ${err.message}`);
-        _channel.onError();
+        _bufferList = [];
+        _channel.onError(err);
       });
       socket.on('end', () => {
         debug(`[${this.id}] Disconnected`);
+        _bufferList = [];
         _channel.onEnd();
       });
     };
+  }
+
+  /**
+   * Send message
+   */
+  send() {
+
   }
 
   /**
@@ -108,5 +115,7 @@ class Channel {
   }
 
 }
+
+Channel.EOL = DEFAULT_EOL;
 
 module.exports = Channel;

@@ -40,8 +40,8 @@ module.exports = {
     * @return {Channel}            A channel
     */
     return (socket) => {
-      let channel = new _ref(service, type);
-      return channel._registerSocket(socket);
+      let channel = new _ref(service);
+      return channel._open(socket);
     };
   }
 

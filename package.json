@@ -9,7 +9,8 @@
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
   "scripts": {
     "test": "node_modules/.bin/jest packages/*/test",
-    "lint": "node_modules/.bin/eslint packages/*/lib/**/*.js packages/*/test/**/*.js"
+    "lint": "node_modules/.bin/eslint packages/*/lib/**/*.js packages/*/test/**/*.js",
+    "watch": "node_modules/.bin/jest packages/*/test --watch"
   },
   "keywords": [
     "worker",

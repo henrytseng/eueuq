@@ -7,26 +7,35 @@ const { URL } = require('url');
 const uuidv1 = require('uuid/v1');
 const net = require('net');
 const debug = require('debug')('eueuq:broker');
+const EventEmitter = require('events');
 
 const Action = require('eueuq-core').Action;
 const ChannelFactory = require('eueuq-core').ChannelFactory;
 const shutdownManager = require('eueuq-core').shutdownManager;
 
+let EUEUQ_CIPHER_KEY = process.env.EUEUQ_CIPHER_KEY;
+let EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
+
 /**
  * Message broker
  */
-class Broker {
+class Broker extends EventEmitter {
 
   /**
    * Constructor
    *
    * @param {String} connectionUri A connection URI value
+   * @param {Object} [config]      A optional configuration Object
    */
   constructor(connectionUri, config) {
+    super();
     this._config = config || {};
-    this._uri = connectionUri;
+    this._config = Object.assign({
+      cipherKey: EUEUQ_CIPHER_KEY
+    }, this._config);
+    this._uri = connectionUri || EUEUQ_BROKER_URI || 'eueuq://localhost:5031';
     this._server = null;
-    this._createService = ChannelFactory.buildCreateMethod(this, 'service');
+    this._createChannel = ChannelFactory.buildCreateMethod(this, 'service');
   }
 
   /**
@@ -44,7 +53,7 @@ class Broker {
   listen() {
     debug(`Listening on port ${this._getPort()}`);
     if(!this._server) {
-      this._server = net.createServer(this._createService).listen(this._getPort());
+      this._server = net.createServer(this._createChannel).listen(this._getPort());
       shutdownManager.on('attempted', () => { this.close(); });
     }
   }
@@ -57,8 +66,8 @@ class Broker {
    */
   perform(message) {
     let _message = Object.assign({}, message);
-    _message._id = uuidv1();
-    _message._sentAt = new Date();
+    _message.id = uuidv1();
+    _message.sentAt = new Date();
     let _action = Action.createWithMessage(_message).execute();
     return _message;
   }

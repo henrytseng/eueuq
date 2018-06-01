@@ -2,10 +2,5 @@
 
 const Broker = require('../lib/broker');
 
-const uri = process.env.EUEUQ_BROKER_URI || 'eueuq://localhost:5031';
-const cipherKey = process.env.EUEUQ_CIPHER_KEY;
-
-var broker = new Broker(uri, {
-  cipherKey
-});
+var broker = new Broker();
 broker.listen();

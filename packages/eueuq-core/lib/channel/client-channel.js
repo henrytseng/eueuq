@@ -3,8 +3,16 @@
 /**
  * Module dependencies
  */
+const Channel = require('./index');
 
-class ClientChannel {
+class ClientChannel extends Channel {
+
+  /**
+   * Send message
+   */
+  send() {
+
+  }
   
 }
 

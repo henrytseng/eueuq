@@ -6,20 +6,21 @@
 const uuidv1 = require('uuid/v1');
 const debug = require('debug')('eueuq:core');
 
+const ConnectionError = require('../errors/connection-error');
+
 const DEFAULT_EOL = "\n";
 
 /**
  * Channel
+ *
+ * Aggregates data into messages
  */
 class Channel {
 
   /**
    * Constructor
-   *
-   * @param {Broker} service A broker
    */
-  constructor(service) {
-    this._service = service;
+  constructor() {
     this.id = uuidv1();
   }
 
@@ -28,7 +29,7 @@ class Channel {
    *
    * @return {Function} A handler function(socket) to which registers received socket
    */
-  _open() {
+  _createRegisterMethod() {
     let _channel = this;
 
     /**
@@ -84,7 +85,7 @@ class Channel {
    * Send message
    */
   send() {
-
+    if(!this._channel.socket) throw new ConnectionError('Unable to send data no socket established');
   }
 
   /**

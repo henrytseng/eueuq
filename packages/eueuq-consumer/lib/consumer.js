@@ -27,7 +27,6 @@ class Consumer extends EventEmitter {
     this._config = config || {};
     this._uri = connectionUri;
     this._connection = null;
-    this._createChannel = ChannelFactory.buildCreateMethod(this, 'client');
   }
 
   connect() {
@@ -42,3 +41,5 @@ class Consumer extends EventEmitter {
     }
   }
 }
+
+module.exports = Consumer;

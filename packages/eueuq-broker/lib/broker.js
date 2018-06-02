@@ -10,7 +10,7 @@ const debug = require('debug')('eueuq:broker');
 const EventEmitter = require('events');
 
 const Action = require('eueuq-core').Action;
-const ChannelFactory = require('eueuq-core').ChannelFactory;
+const ServiceChannel = require('eueuq-core').ServiceChannel;
 const shutdownManager = require('eueuq-core').shutdownManager;
 
 let EUEUQ_CIPHER_KEY = process.env.EUEUQ_CIPHER_KEY;
@@ -35,7 +35,9 @@ class Broker extends EventEmitter {
     }, this._config);
     this._uri = connectionUri || EUEUQ_BROKER_URI || 'eueuq://localhost:5031';
     this._server = null;
-    this._createChannel = ChannelFactory.buildCreateMethod(this, 'service');
+    this._producers = new Set();
+    this._consumers = new Set();
+    this._channels = new Set();
   }
 
   /**
@@ -48,13 +50,38 @@ class Broker extends EventEmitter {
   }
 
   /**
+   * Internal method to retrieve cipher key
+   *
+   * @return {String} A key
+   */
+  _getCipherKey() {
+    return this._config.cipherKey;
+  }
+
+  /**
    * Start service
    */
   listen() {
     debug(`Listening on port ${this._getPort()}`);
     if(!this._server) {
-      this._server = net.createServer(this._createChannel).listen(this._getPort());
+      this._server = net.createServer((socket) => {
+        let _channel = new ServiceChannel();
+        let _registerMethod = _channel._createRegisterMethod();
+        let _unregisterMethod = () => {
+          debug(`Removing channel[${_channel.id}]`);
+          this._channels.delete(_channel);
+        };
+        this._channels.add(_channel);
+        socket.once('end', _unregisterMethod);
+        socket.once('error', _unregisterMethod);
+        debug(`Adding channel[${_channel.id}]`);
+        _registerMethod(socket);
+      });
+      this._server.listen(this._getPort());
       shutdownManager.on('attempted', () => { this.close(); });
+
+    } else {
+      debug(`Existing service listening on port ${this._getPort()}`);
     }
   }
 
@@ -76,10 +103,10 @@ class Broker extends EventEmitter {
    * Close connection
    */
   close() {
-    if(this._server) {
+    if(this._serviceChannel) {
       debug('Disconnecting');
-      this._server.close();
-      this._server = null;
+      this._serviceChannel.close();
+      this._serviceChannel = null;
     } else {
       debug('Unable able to close; not listening');
     }

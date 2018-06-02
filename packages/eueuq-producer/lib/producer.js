@@ -9,6 +9,7 @@ const debug = require('debug')('eueuq:producer');
 const EventEmitter = require('events');
 
 const ChannelFactory = require('eueuq-core').ChannelFactory;
+const ConfigurationError = require('eueuq-core').errors.ConfigurationError;
 const shutdownManager = require('eueuq-core').shutdownManager;
 
 /**
@@ -27,7 +28,8 @@ class Producer extends EventEmitter {
     this._config = config || {};
     this._uri = connectionUri;
     this._connection = null;
-    this._createChannel = ChannelFactory.buildCreateMethod(this, 'client');
+
+    if(!this._uri) throw new ConfigurationError('A connection URI is needed.');
   }
 
   connect() {
@@ -42,3 +44,5 @@ class Producer extends EventEmitter {
     }
   }
 }
+
+module.exports = Producer;

@@ -11,4 +11,13 @@ class Action {
   }
 }
 
+/**
+ * Factory method to create action
+ *
+ * @return {Action} An action
+ */
+Action.createWithMessage = function() {
+
+};
+
 module.exports = Action;

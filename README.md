@@ -10,8 +10,9 @@ Work in progress.
 * Job priority
 * Scheduled jobs
 * RPC style command pattern
-* Graceful worker shutdown
+* Graceful broker and worker shutdown
 * Retry back-off
-* Job batch progress tracking
+* Batch jobs
+* Progress tracking
 * Dashboard GUI
 

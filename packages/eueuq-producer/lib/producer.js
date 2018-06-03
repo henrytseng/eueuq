@@ -10,6 +10,7 @@ const EventEmitter = require('events');
 
 const ChannelFactory = require('eueuq-core').ChannelFactory;
 const ConfigurationError = require('eueuq-core').errors.ConfigurationError;
+const params = require('parametr');
 const shutdownManager = require('eueuq-core').shutdownManager;
 
 /**
@@ -25,7 +26,8 @@ class Producer extends EventEmitter {
    */
   constructor(connectionUri, config) {
     super();
-    this._config = config || {};
+    this._config = params(config || {})
+      .require('cipherKey');
     this._uri = connectionUri;
     this._connection = null;
 

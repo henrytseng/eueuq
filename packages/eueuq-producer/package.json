@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/henrytseng/eueuq#readme",
   "dependencies": {
-    "eueuq-core": "^0.0.2"
+    "eueuq-core": "^0.0.2",
+    "parametr": "^1.0.0"
   }
 }

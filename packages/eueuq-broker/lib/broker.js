@@ -59,22 +59,39 @@ class Broker extends EventEmitter {
   }
 
   /**
+   * Internal method to add channel
+   *
+   * @return {ServiceChannel} A registered channel
+   */
+  _createChannel() {
+    let channel = new ServiceChannel();
+    debug(`Adding channel[${channel.id}]`);
+    this._channels.add(channel);
+    return channel;
+  }
+
+  /**
+   * Internal method to remove channel
+   *
+   * @param  {ServiceChannel} channel [description]
+   */
+  _destroyChannel(channel) {
+    debug(`Removing channel[${channel.id}]`);
+    if(this._channels.has(channel)) this._channels.delete(channel);
+  }
+
+  /**
    * Start service
    */
   listen() {
     debug(`Listening on port ${this._getPort()}`);
     if(!this._server) {
       this._server = net.createServer((socket) => {
-        let _channel = new ServiceChannel();
+        let _channel = this._createChannel();
         let _registerMethod = _channel._createRegisterMethod();
-        let _unregisterMethod = () => {
-          debug(`Removing channel[${_channel.id}]`);
-          this._channels.delete(_channel);
-        };
-        this._channels.add(_channel);
+        let _unregisterMethod = this._destroyChannel.bind(this);
         socket.once('end', _unregisterMethod);
         socket.once('error', _unregisterMethod);
-        debug(`Adding channel[${_channel.id}]`);
         _registerMethod(socket);
       });
       this._server.listen(this._getPort());

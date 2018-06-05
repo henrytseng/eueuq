@@ -5,13 +5,11 @@
  */
 const { URL } = require('url');
 const uuidv1 = require('uuid/v1');
-const net = require('net');
 const debug = require('debug')('eueuq:broker');
 const EventEmitter = require('events');
 
 const Action = require('eueuq-core').Action;
 const ServiceChannel = require('eueuq-core').ServiceChannel;
-const shutdownManager = require('eueuq-core').shutdownManager;
 
 let EUEUQ_CIPHER_KEY = process.env.EUEUQ_CIPHER_KEY;
 let EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
@@ -34,10 +32,9 @@ class Broker extends EventEmitter {
       cipherKey: EUEUQ_CIPHER_KEY
     }, this._config);
     this._uri = connectionUri || EUEUQ_BROKER_URI || 'eueuq://localhost:5031';
-    this._server = null;
     this._producers = new Set();
     this._consumers = new Set();
-    this._channels = new Set();
+    this._channel = new ServiceChannel();
   }
 
   /**
@@ -59,47 +56,10 @@ class Broker extends EventEmitter {
   }
 
   /**
-   * Internal method to add channel
-   *
-   * @return {ServiceChannel} A registered channel
-   */
-  _createChannel() {
-    let channel = new ServiceChannel();
-    debug(`Adding channel[${channel.id}]`);
-    this._channels.add(channel);
-    return channel;
-  }
-
-  /**
-   * Internal method to remove channel
-   *
-   * @param  {ServiceChannel} channel [description]
-   */
-  _destroyChannel(channel) {
-    debug(`Removing channel[${channel.id}]`);
-    if(this._channels.has(channel)) this._channels.delete(channel);
-  }
-
-  /**
-   * Start service
+   * Start brokering service
    */
   listen() {
-    debug(`Listening on port ${this._getPort()}`);
-    if(!this._server) {
-      this._server = net.createServer((socket) => {
-        let _channel = this._createChannel();
-        let _registerMethod = _channel._createRegisterMethod();
-        let _unregisterMethod = this._destroyChannel.bind(this);
-        socket.once('end', _unregisterMethod);
-        socket.once('error', _unregisterMethod);
-        _registerMethod(socket);
-      });
-      this._server.listen(this._getPort());
-      shutdownManager.on('attempted', () => { this.close(); });
-
-    } else {
-      debug(`Existing service listening on port ${this._getPort()}`);
-    }
+    this._channel.listen(this._getPort());
   }
 
   /**
@@ -117,16 +77,10 @@ class Broker extends EventEmitter {
   }
 
   /**
-   * Close connection
+   * Close service
    */
   close() {
-    if(this._serviceChannel) {
-      debug('Disconnecting');
-      this._serviceChannel.close();
-      this._serviceChannel = null;
-    } else {
-      debug('Unable able to close; not listening');
-    }
+    this._channel.close();
   }
 }
 

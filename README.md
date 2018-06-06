@@ -11,6 +11,8 @@ Work in progress.
 * Scheduled jobs
 * RPC style command pattern
 * Graceful broker and worker shutdown
+* Rolling restarts
+* Encryption
 * Retry back-off
 * Batch jobs
 * Progress tracking

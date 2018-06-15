@@ -34,6 +34,7 @@ test('connects a consumer to a broker broker', () => {
   let consumer = new Consumer(uri, config);
 
   process.nextTick(() => broker.listen());
+  process.nextTick(() => producer.connect());
 
 
   expect(broker).toBeTruthy();

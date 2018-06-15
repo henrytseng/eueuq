@@ -3,7 +3,7 @@
 /**
  * Module dependencies
  */
-const uuidv1 = require('uuid/v1');
+const uuidv4 = require('uuid/v4');
 
 const ConnectionError = require('../errors/connection-error');
 
@@ -20,7 +20,7 @@ class Channel {
    * Constructor
    */
   constructor() {
-    this.id = uuidv1();
+    this.id = uuidv4();
   }
 
   /**
@@ -49,10 +49,10 @@ class Channel {
 
       _channel.socket = socket;
       _channel.onConnect();
-      debug(`[${this.id}] Connected channel`);
+      this._debug(`Connected channel`);
 
       socket.on('data', (buffer) => {
-        debug(`[${this.id}] Received data ${buffer.length}`);
+        this._debug(`Received data ${buffer.length}`);
         let i;
         let k;
         let lastBuf;
@@ -65,7 +65,7 @@ class Channel {
           nextBuf = nextBuf.slice(i + Channel.EOL.length);
 
           // Finish last
-          debug(`[${this.id}] Message collected`);
+          this._debug(`Message collected`);
           completedList = _bufferList;
           completedList.push(lastBuf);
           _channel.onMessage(Buffer.concat(completedList));
@@ -76,12 +76,12 @@ class Channel {
         _bufferList.push(nextBuf);
       });
       socket.on('error', (err) => {
-        debug(`[${this.id}] Encountered error: ${err.message}`);
+        this._debug(`Encountered error: ${err.message}`);
         _bufferList = [];
         _channel.onError(err);
       });
       socket.on('end', () => {
-        debug(`[${this.id}] Disconnected`);
+        this._debug(`Disconnected`);
         _bufferList = [];
         _channel.onEnd();
       });

@@ -9,15 +9,6 @@ const debug = require('debug')('eueuq:core:channel:client');
 const Channel = require('./index');
 
 /**
- * Decorate debugger with origin identification
- *
- * @param  {String} message A message payload
- */
-const _debugInfo = (message) => {
-  debug(`[${this.id}] ${message}`);
-};
-
-/**
  * Channel representation on client side of connection with server
  *
  * @extends Channel
@@ -29,6 +20,15 @@ class ClientChannel extends Channel {
   }
 
   /**
+   * Decorate debugger with origin identification
+   *
+   * @param  {String} message A message payload
+   */
+  _debug(message) {
+    debug(`[${this.id}] ${message}`);
+  }
+
+  /**
    * Connect to a ServiceChannel
    *
    * @param  {Number}  port A port
@@ -37,22 +37,22 @@ class ClientChannel extends Channel {
    */
   connect(port, host) {
     if(this._connection) {
-      _debugInfo(`Existing connection unable alreday started ${host}:${port}`);
+      this._debug(`Existing connection unable alreday started ${host}:${port}`);
       return false;
     }
 
-    _debugInfo(`Connecting`);
+    this._debug(`Connecting`);
     this._connection = net.createConnection({
       host: host,
       port: port
     }, () => {
-      _debugInfo(`Connection established ${host}:${port}`);
+      this._debug(`Connection established ${host}:${port}`);
 
     });
   }
 
   disconnect() {
-    _debugInfo(`Disconnecting`);
+    this._debug(`Disconnecting`);
   }
 
   /**

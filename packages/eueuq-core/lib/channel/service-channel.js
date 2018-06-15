@@ -9,15 +9,6 @@ const debug = require('debug')('eueuq:core:channel:service');
 const Channel = require('./index');
 
 /**
- * Decorate debugger with origin identification
- *
- * @param  {String} message A message payload
- */
-const _debugInfo = (message) => {
-  debug(`[${this.id}] ${message}`);
-};
-
-/**
  * Channel representation on service side of connection with client
  *
  * @extends Channel
@@ -29,6 +20,15 @@ class ServiceChannel extends Channel {
    */
   constructor() {
     super();
+  }
+
+  /**
+   * Decorate debugger with origin identification
+   *
+   * @param  {String} message A message payload
+   */
+  _debug(message) {
+    debug(`[${this.id}] ${message}`);
   }
 
   /**

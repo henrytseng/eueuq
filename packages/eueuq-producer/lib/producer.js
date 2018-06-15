@@ -10,7 +10,6 @@ const EventEmitter = require('events');
 
 const ClientChannel = require('eueuq-core').ClientChannel;
 const ConfigurationError = require('eueuq-core').errors.ConfigurationError;
-const params = require('parametr');
 const shutdownManager = require('eueuq-core').shutdownManager;
 
 const EUEUQ_CIPHER_KEY = process.env.EUEUQ_CIPHER_KEY;
@@ -40,11 +39,11 @@ class Producer extends EventEmitter {
   }
 
   connect() {
-    this._channel.open();
+    this._channel.connect(this._uri.port, this._uri.hostname);
   }
 
   disconnect() {
-    this._channel.close();
+    this._channel.disconnect();
   }
 }
 

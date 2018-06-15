@@ -5,22 +5,13 @@
  */
 const net = require('net');
 const debug = require('debug')('eueuq:core:channel:service');
-const uuidv1 = require('uuid/v1');
+const uuidv4 = require('uuid/v4');
 
 const ServiceChannel = require('./service-channel');
 const shutdownManager = require('../shutdown/shutdown-manager');
 const ConnectionError = require('../errors/connection-error');
 
 const MAX_RETRY_LISTENING = 5;
-
-/**
- * Decorate debugger with origin identification
- *
- * @param  {String} message A message payload
- */
-const _debugInfo = (message) => {
-  debug(`[${this.id}] ${message}`);
-};
 
 /**
  * A server to receive channel socket connections
@@ -32,7 +23,16 @@ class ChannelServer {
    */
   constructor() {
     this._channelCollection = new Map();
-    this.id = uuidv1();
+    this.id = uuidv4();
+  }
+
+  /**
+   * Decorate debugger with origin identification
+   *
+   * @param  {String} message A message payload
+   */
+  _debug(message) {
+    debug(`[${this.id}] ${message}`);
   }
 
   /**
@@ -42,7 +42,7 @@ class ChannelServer {
    */
   _createChannel() {
     let channel = new ServiceChannel();
-    _debugInfo(`Adding channel[${channel.id}]`);
+    this._debug(`Adding channel[${channel.id}]`);
     this._channelCollection.set(channel.id, channel);
     return channel;
   }
@@ -55,10 +55,10 @@ class ChannelServer {
   _destroyChannel(channel) {
     let channelId = channel.id;
     if(!this._channelCollection.has(channelId)) {
-      _debugInfo(`Unable to destroy channel[${channelId}] is not registered`);
+      this._debug(`Unable to destroy channel[${channelId}] is not registered`);
       return false;
     }
-    _debugInfo(`Removing channel[${channelId}]`);
+    this._debug(`Removing channel[${channelId}]`);
     this._channelCollection.delete(channelId);
     return true;
   }
@@ -72,7 +72,7 @@ class ChannelServer {
    */
   listen(port, host) {
     if(this._server) {
-      _debugInfo(`Existing server unable to start listening on port ${host}:${port}`);
+      this._debug(`Existing server unable to start listening on port ${host}:${port}`);
       return false;
     }
 
@@ -87,7 +87,7 @@ class ChannelServer {
     let _startListening = () => {
       clearTimeout(this._startServerRetryTimeout);
       this._server.listen(port, host, () => {
-        _debugInfo(`Listening on port ${port}`);
+        this._debug(`Listening on port ${port}`);
       });
     };
 
@@ -99,11 +99,11 @@ class ChannelServer {
         if(_attemptCount >= MAX_RETRY_LISTENING) {
           throw new ConnectionError(`Unable to establish listen port:${port}`);
         } else {
-          _debugInfo(`Address in use retrying port:${port}`);
+          this._debug(`Address in use retrying port:${port}`);
           this._startServerRetryTimeout = setTimeout(_startListening, 1000);
         }
       } else {
-        _debugInfo(`Encountered error acquiring port:${port}`);
+        this._debug(`Encountered error acquiring port:${port}`);
       }
     });
 
@@ -118,10 +118,10 @@ class ChannelServer {
    * Close service
    */
   close() {
-    _debugInfo(`Closing service`);
+    this._debug(`Closing service`);
     clearTimeout(this._startServerRetryTimeout);
     if(!this._server) {
-      _debugInfo(`Unable able to close; not listening`);
+      this._debug(`Unable able to close; not listening`);
       return false;
     }
 

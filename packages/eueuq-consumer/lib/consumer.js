@@ -8,8 +8,13 @@ const net = require('net');
 const debug = require('debug')('eueuq:consumer');
 const EventEmitter = require('events');
 
-const ChannelFactory = require('eueuq-core').ChannelFactory;
+const ClientChannel = require('eueuq-core').ClientChannel;
+const ConfigurationError = require('eueuq-core').errors.ConfigurationError;
+const params = require('parametr');
 const shutdownManager = require('eueuq-core').shutdownManager;
+
+const EUEUQ_CIPHER_KEY = process.env.EUEUQ_CIPHER_KEY;
+const EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
 
 /**
  * Message consumer
@@ -19,26 +24,27 @@ class Consumer extends EventEmitter {
   /**
    * Constructor
    *
-   * @param {String} connectionUri A connection URI value
-   * @param {Object} [config]      A optional configuration Object
+   * @param {Object} config A configuration Object
    */
-  constructor(connectionUri, config) {
+  constructor(config) {
     super();
     this._config = config || {};
-    this._uri = connectionUri;
-    this._connection = null;
+    this._config = Object.assign({
+      cipherKey: EUEUQ_CIPHER_KEY,
+      connectionUri: EUEUQ_BROKER_URI || 'eueuq://localhost:5031'
+    }, this._config);
+    this._uri = new URL(this._config.connectionUri);
+    this._channel = new ClientChannel();
+
+    if(!this._uri) throw new ConfigurationError('A connection URI is needed.');
   }
 
   connect() {
-    if(!this._channel) {
-      this._channel.open();
-    }
+    this._channel.open();
   }
 
   disconnect() {
-    if(!this._channel) {
-      this._channel.close();
-    }
+    this._channel.close();
   }
 }
 

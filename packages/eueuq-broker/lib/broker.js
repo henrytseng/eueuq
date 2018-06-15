@@ -9,10 +9,10 @@ const debug = require('debug')('eueuq:broker');
 const EventEmitter = require('events');
 
 const Action = require('eueuq-core').Action;
-const ServiceChannel = require('eueuq-core').ServiceChannel;
+const ChannelServer = require('eueuq-core').ChannelServer;
 
-let EUEUQ_CIPHER_KEY = process.env.EUEUQ_CIPHER_KEY;
-let EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
+const EUEUQ_CIPHER_KEY = process.env.EUEUQ_CIPHER_KEY;
+const EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
 
 /**
  * Message broker
@@ -22,28 +22,17 @@ class Broker extends EventEmitter {
   /**
    * Constructor
    *
-   * @param {String} connectionUri A connection URI value
-   * @param {Object} [config]      A optional configuration Object
+   * @param {Object} config A configuration Object
    */
-  constructor(connectionUri, config) {
+  constructor(config) {
     super();
     this._config = config || {};
     this._config = Object.assign({
-      cipherKey: EUEUQ_CIPHER_KEY
+      cipherKey: EUEUQ_CIPHER_KEY,
+      connectionUri: EUEUQ_BROKER_URI || 'eueuq://localhost:5031'
     }, this._config);
-    this._uri = connectionUri || EUEUQ_BROKER_URI || 'eueuq://localhost:5031';
-    this._producers = new Set();
-    this._consumers = new Set();
-    this._channel = new ServiceChannel();
-  }
-
-  /**
-   * Internal method to get port
-   *
-   * @return {String} A port number
-   */
-  _getPort() {
-    return this._port = this._port || (new URL(this._uri).port);
+    this._uri = new URL(this._config.connectionUri);
+    this._server = new ChannelServer();
   }
 
   /**
@@ -59,7 +48,7 @@ class Broker extends EventEmitter {
    * Start brokering service
    */
   listen() {
-    this._channel.listen(this._getPort());
+    this._server.listen(this._uri.port, this._uri.hostname);
   }
 
   /**
@@ -80,7 +69,7 @@ class Broker extends EventEmitter {
    * Close service
    */
   close() {
-    this._channel.close();
+    this._server.close();
   }
 }
 

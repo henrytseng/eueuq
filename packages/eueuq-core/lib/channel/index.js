@@ -4,7 +4,6 @@
  * Module dependencies
  */
 const uuidv1 = require('uuid/v1');
-const debug = require('debug')('eueuq:core');
 
 const ConnectionError = require('../errors/connection-error');
 
@@ -22,6 +21,14 @@ class Channel {
    */
   constructor() {
     this.id = uuidv1();
+  }
+
+  /**
+   * Internal debug logging
+   *
+   */
+  _debug(message) {
+
   }
 
   /**

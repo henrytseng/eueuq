@@ -10,7 +10,7 @@
   "scripts": {
     "test": "node_modules/.bin/jest packages/*/test",
     "lint": "node_modules/.bin/eslint packages/*/lib/**/*.js packages/*/test/**/*.js",
-    "watch": "node_modules/.bin/jest packages/*/test --watch"
+    "watch": "DEBUG=eueuq* node_modules/.bin/jest packages/*/test --watch"
   },
   "keywords": [
     "worker",

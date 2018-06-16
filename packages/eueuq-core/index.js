@@ -2,6 +2,7 @@
 
 module.exports = {
   Action: require('./lib/action'),
+  Config: require('./lib/config'),
   ChannelServer: require('./lib/channel/channel-server'),
   ServiceChannel: require('./lib/channel/service-channel'),
   ClientChannel: require('./lib/channel/client-channel'),

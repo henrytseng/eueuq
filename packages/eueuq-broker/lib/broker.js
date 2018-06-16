@@ -3,16 +3,13 @@
 /**
  * Module dependencies
  */
-const { URL } = require('url');
 const uuidv1 = require('uuid/v1');
 const debug = require('debug')('eueuq:broker');
 const EventEmitter = require('events');
 
+const Config = require('eueuq-core').Config;
 const Action = require('eueuq-core').Action;
 const ChannelServer = require('eueuq-core').ChannelServer;
-
-const EUEUQ_CIPHER_KEY = process.env.EUEUQ_CIPHER_KEY;
-const EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
 
 /**
  * Message broker
@@ -20,19 +17,18 @@ const EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
  * @param {Object} config A configuration Object
  */
 module.exports = function Broker(config) {
-
-  // Config
-  const _config = Object.assign({
-    cipherKey: EUEUQ_CIPHER_KEY,
-    connectionUri: EUEUQ_BROKER_URI || 'eueuq://localhost:5031'
-  }, config || {});
-
-  const _uri = new URL(_config.connectionUri);
+  const _config = Config(config, process.env);
+  const _uri = _config.connectionUri;
   const _server = new ChannelServer();
 
-  // Static instance
+  // Static
   return {
 
+    /**
+     * Get encyption cipher
+     *
+     * @return {Strign} A cipher
+     */
     getCipherKey: () => {
       return _config.cipherKey;
     },

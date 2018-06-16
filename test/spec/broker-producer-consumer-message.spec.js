@@ -30,8 +30,8 @@ test('connects a consumer to a broker broker', () => {
   const uri = _getUri();
   const broker = Broker(uri);
   const config = { cipherKey: broker.getCipherKey() };
-  const producer = new Producer(uri, config);
-  const consumer = new Consumer(uri, config);
+  const producer = Producer(uri, config);
+  const consumer = Consumer(uri, config);
 
   process.nextTick(() => broker.listen());
   process.nextTick(() => producer.connect());

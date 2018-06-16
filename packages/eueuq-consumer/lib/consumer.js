@@ -8,6 +8,7 @@ const net = require('net');
 const debug = require('debug')('eueuq:consumer');
 const EventEmitter = require('events');
 
+const Config = require('eueuq-core').Config;
 const ClientChannel = require('eueuq-core').ClientChannel;
 const ConfigurationError = require('eueuq-core').errors.ConfigurationError;
 const shutdownManager = require('eueuq-core').shutdownManager;
@@ -18,33 +19,26 @@ const EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
 /**
  * Message consumer
  */
-class Consumer extends EventEmitter {
+module.exports = function Consumer(config) {
+  const _config = Config(config, process.env);
+  const _uri = _config.connectionUri;
+  const _channel = new ClientChannel();
 
-  /**
-   * Constructor
-   *
-   * @param {Object} config A configuration Object
-   */
-  constructor(config) {
-    super();
-    this._config = config || {};
-    this._config = Object.assign({
-      cipherKey: EUEUQ_CIPHER_KEY,
-      connectionUri: EUEUQ_BROKER_URI || 'eueuq://localhost:5031'
-    }, this._config);
-    this._uri = new URL(this._config.connectionUri);
-    this._channel = new ClientChannel();
+  // Static
+  return {
 
-    if(!this._uri) throw new ConfigurationError('A connection URI is needed.');
-  }
+    /**
+     * Start connection with broker
+     */
+    connect: () => {
+      _channel.connect(_uri.port, _uri.hostname);
+    },
 
-  connect() {
-    this._channel.connect(this._uri.port, this._uri.hostname);
-  }
-
-  disconnect() {
-    this._channel.disconnect();
-  }
-}
-
-module.exports = Consumer;
+    /**
+     * Disconnect from broker
+     */
+    disconnect: () => {
+      _channel.disconnect();
+    }
+  };
+};

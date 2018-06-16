@@ -3,18 +3,10 @@
 /**
  * Module dependencies
  */
-const { URL } = require('url');
-const net = require('net');
 const debug = require('debug')('eueuq:producer');
-const EventEmitter = require('events');
 
 const Config = require('eueuq-core').Config;
 const ClientChannel = require('eueuq-core').ClientChannel;
-const ConfigurationError = require('eueuq-core').errors.ConfigurationError;
-const shutdownManager = require('eueuq-core').shutdownManager;
-
-const EUEUQ_CIPHER_KEY = process.env.EUEUQ_CIPHER_KEY;
-const EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
 
 /**
  * Message producer

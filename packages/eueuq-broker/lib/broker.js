@@ -3,9 +3,8 @@
 /**
  * Module dependencies
  */
-const uuidv1 = require('uuid/v1');
 const debug = require('debug')('eueuq:broker');
-const EventEmitter = require('events');
+const uuidv1 = require('uuid/v1');
 
 const Config = require('eueuq-core').Config;
 const Action = require('eueuq-core').Action;

@@ -16,61 +16,53 @@ const EUEUQ_BROKER_URI = process.env.EUEUQ_BROKER_URI;
 
 /**
  * Message broker
+ *
+ * @param {Object} config A configuration Object
  */
-class Broker extends EventEmitter {
+module.exports = function Broker(config) {
 
-  /**
-   * Constructor
-   *
-   * @param {Object} config A configuration Object
-   */
-  constructor(config) {
-    super();
-    this._config = config || {};
-    this._config = Object.assign({
-      cipherKey: EUEUQ_CIPHER_KEY,
-      connectionUri: EUEUQ_BROKER_URI || 'eueuq://localhost:5031'
-    }, this._config);
-    this._uri = new URL(this._config.connectionUri);
-    this._server = new ChannelServer();
-  }
+  // Config
+  const _config = Object.assign({
+    cipherKey: EUEUQ_CIPHER_KEY,
+    connectionUri: EUEUQ_BROKER_URI || 'eueuq://localhost:5031'
+  }, config || {});
 
-  /**
-   * Internal method to retrieve cipher key
-   *
-   * @return {String} A key
-   */
-  _getCipherKey() {
-    return this._config.cipherKey;
-  }
+  const _uri = new URL(_config.connectionUri);
+  const _server = new ChannelServer();
 
-  /**
-   * Start brokering service
-   */
-  listen() {
-    this._server.listen(this._uri.port, this._uri.hostname);
-  }
+  // Static instance
+  return {
 
-  /**
-   * Perform an action
-   *
-   * @param  {Object} message A data Object payload describing an action
-   * @return                  A data Object sent
-   */
-  perform(message) {
-    let _message = Object.assign({}, message);
-    _message.id = uuidv1();
-    _message.sentAt = new Date();
-    let _action = Action.createWithMessage(_message).execute();
-    return _message;
-  }
+    getCipherKey: () => {
+      return _config.cipherKey;
+    },
 
-  /**
-   * Close service
-   */
-  close() {
-    this._server.close();
-  }
-}
+    /**
+     * Start brokering service
+     */
+    listen: () => {
+      _server.listen(_uri.port, _uri.hostname);
+    },
 
-module.exports = Broker;
+    /**
+     * Perform an action
+     *
+     * @param  {Object} message A data Object payload describing an action
+     * @return                  A data Object sent
+     */
+    perform: (message) => {
+      let _message = Object.assign({}, message);
+      _message.id = uuidv1();
+      _message.sentAt = new Date();
+      let _action = Action.createWithMessage(_message).execute();
+      return _message;
+    },
+
+    /**
+     * Close service
+     */
+    close: () => {
+      _server.close();
+    }
+  };
+};

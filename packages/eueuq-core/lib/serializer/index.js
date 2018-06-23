@@ -68,6 +68,7 @@ module.exports = function Serializer(config) {
       const payload = JSON.parse(decrypted);
       return payload;
     }
+
   };
 
 };

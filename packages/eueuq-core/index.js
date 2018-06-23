@@ -3,12 +3,10 @@
 module.exports = {
   Action: require('./lib/action'),
   Config: require('./lib/config'),
-  ChannelServer: require('./lib/channel/channel-server'),
-  ServiceChannel: require('./lib/channel/service-channel'),
-  ClientChannel: require('./lib/channel/client-channel'),
+  ConnectionStream: require('./lib/channel/connection-stream'),
   errors: {
     ConfigurationError: require('./lib/errors/configuration-error'),
     ConnectionError: require('./lib/errors/connection-error')
   },
-  shutdownManager: require('./lib/shutdown/shutdown-manager')
+  signalInterupt: require('./lib/shutdown/signal-interupt')
 };

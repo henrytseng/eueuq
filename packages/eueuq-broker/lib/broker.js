@@ -8,56 +8,57 @@ const uuidv1 = require('uuid/v1');
 
 const Config = require('eueuq-core').Config;
 const Action = require('eueuq-core').Action;
-const ChannelServer = require('eueuq-core').ChannelServer;
+const ConnectionStream = require('eueuq-core').ConnectionStream;
 
 /**
- * Message broker
+ * A factory method to produce message brokers
  *
  * @param {Object} config A configuration Object
  */
 module.exports = function Broker(config) {
   const _config = Config(config, process.env);
   const _uri = _config.connectionUri;
-  const _server = new ChannelServer();
 
-  // Static
-  return {
+  // Internal factory method
+  function _brokerReproducer() {
 
-    /**
-     * Get encyption cipher
-     *
-     * @return {Strign} A cipher
-     */
-    getCipherKey: () => {
-      return _config.cipherKey;
-    },
+    // Instance
+    return {
 
-    /**
-     * Start brokering service
-     */
-    listen: () => {
-      _server.listen(_uri.port, _uri.hostname);
-    },
+      /**
+       * Get encyption cipher
+       *
+       * @return {Strign} A cipher
+       */
+      getCipherKey: () => {
+        return _config.cipherKey;
+      },
 
-    /**
-     * Perform an action
-     *
-     * @param  {Object} message A data Object payload describing an action
-     * @return                  A data Object sent
-     */
-    perform: (message) => {
-      let _message = Object.assign({}, message);
-      _message.id = uuidv1();
-      _message.sentAt = new Date();
-      let _action = Action.createWithMessage(_message).execute();
-      return _message;
-    },
+      /**
+       * Receive from incoming channel streams
+       *
+       * @return {ChannelStream} A message stream
+       */
+      messages: () => {
+        return ConnectionStream(_uri.port, _uri.hostname);
+      },
 
-    /**
-     * Close service
-     */
-    close: () => {
-      _server.close();
-    }
-  };
+      /**
+       * Send outgoing
+       *
+       * @param  {Object} message A data Object payload describing an action
+       * @return {Broker}         A Broker, chainable method
+       */
+      send: (message) => {
+        let _message = Object.assign({}, message);
+        _message.id = uuidv1();
+        _message.sentAt = new Date();
+        Action.createWithMessage(_message).execute();
+        return _brokerReproducer();
+      }
+
+    };
+  }
+
+  return _brokerReproducer();
 };

@@ -26,15 +26,17 @@ test('instantiates a consumer', () => {
   expect(consumer).toBeTruthy();
 });
 
-test('connects a consumer to a broker broker', () => {
+test('connects a consumer to a broker broker', (done) => {
   const uri = _getUri();
   const broker = Broker(uri);
   const config = { cipherKey: broker.getCipherKey() };
-  const producer = Producer(uri, config);
-  const consumer = Consumer(uri, config);
 
-  process.nextTick(() => broker.listen());
-  process.nextTick(() => producer.connect());
+  // const producer = Producer(uri, config);
+  // const consumer = Consumer(uri, config);
+
+  let messageStream = broker.messages();
+
 
   expect(broker).toBeTruthy();
+  done();
 });

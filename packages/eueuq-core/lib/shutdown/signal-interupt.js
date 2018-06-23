@@ -1,5 +1,5 @@
 const { fromEvent } = require('rxjs');
-const { skip } = require('rxjs/operators');
+const { skip, take } = require('rxjs/operators');
 const debug = require('debug')('eueuq:core');
 
 /**
@@ -22,7 +22,7 @@ function SignalInterupt() {
     process.exit(1);
   });
 
-  return _sigintStream;
+  return _sigintStream.pipe(take(1));
 }
 
 module.exports = SignalInterupt();

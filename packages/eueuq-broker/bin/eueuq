@@ -3,4 +3,4 @@
 const Broker = require('../lib/broker');
 
 var broker = new Broker();
-broker.listen();
+broker.messages();

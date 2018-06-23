@@ -2,7 +2,7 @@
  * Module dependencies
  */
 const net = require('net');
-const debug = require('debug')('eueuq:core:channel:service');
+const debug = require('debug')('eueuq:core:channel:connections');
 const uuidv4 = require('uuid/v4');
 const { Subject, fromEvent } = require('rxjs');
 const { filter, delay, take } = require('rxjs/operators');
@@ -17,8 +17,8 @@ const RETRY_DELAY = 1000;
  * A factory method for channel streams
  */
 module.exports = function ConnectionStream(port, host) {
-  const _id = uuidv4();
-  const _channelStream = new Subject();
+  const _serverId = uuidv4();
+  const _connectionStream = new Subject();
 
   /**
    * Internal debug method
@@ -26,13 +26,13 @@ module.exports = function ConnectionStream(port, host) {
    * @param  {String} message A message payload
    */
   function _debug(message) {
-    return debug(`[${_id}] ${message}`);
+    return debug(`[${_serverId}] ${message}`);
   }
 
   // Server instance
   const _server = net.createServer((socket) => {
     _debug(`Connected channel`);
-    _channelStream.next(MessageStream(socket));
+    _connectionStream.next(MessageStream(socket));
   });
 
   /**
@@ -46,9 +46,9 @@ module.exports = function ConnectionStream(port, host) {
 
   // Server error
   const _retryAttempt = (new Subject()).pipe(delay(RETRY_DELAY), take(MAX_RETRY_LISTENING));
-  const _serverErrorStream = fromEvent(_server, 'error').pipe(filter((err) => err.code == 'EADDRINUSE'));
+  const _serverError = fromEvent(_server, 'error').pipe(filter((err) => err.code == 'EADDRINUSE'));
 
-  _serverErrorStream.subscribe((err) => {
+  _serverError.subscribe((err) => {
     _debug(`Encountered error acquiring port:${port}`);
     _retryAttempt.next(err);
   });
@@ -65,5 +65,5 @@ module.exports = function ConnectionStream(port, host) {
 
   _startListening();
 
-  return _channelStream;
+  return _connectionStream;
 };

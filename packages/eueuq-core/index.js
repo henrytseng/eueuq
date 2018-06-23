@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
   Action: require('./lib/action'),
   Config: require('./lib/config'),

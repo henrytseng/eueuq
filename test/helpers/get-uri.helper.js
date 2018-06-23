@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Generates URI with a random port
  *

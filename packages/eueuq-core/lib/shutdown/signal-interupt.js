@@ -1,3 +1,6 @@
+/**
+ * Module dependencies
+ */
 const { fromEvent } = require('rxjs');
 const { skip, take } = require('rxjs/operators');
 const debug = require('debug')('eueuq:core');

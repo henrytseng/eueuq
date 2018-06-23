@@ -1,5 +1,3 @@
-'use strict';
-
 class ConnectionError extends Error {
 
 }

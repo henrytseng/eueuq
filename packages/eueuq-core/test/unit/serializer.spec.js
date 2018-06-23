@@ -1,5 +1,3 @@
-'use strict';
-
 const Serializer = require('../../lib/serializer');
 
 function _getRandom() { return Math.round(Math.random() * 0xffffff).toString(16); }

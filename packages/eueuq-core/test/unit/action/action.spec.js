@@ -1,5 +1,3 @@
-'use strict';
-
 const Action = require('../../../lib/action');
 
 test('abstract Action cannot execute', () => {

@@ -1,5 +1,3 @@
-'use strict';
-
 const Action = require('eueuq-core').Action;
 
 /**

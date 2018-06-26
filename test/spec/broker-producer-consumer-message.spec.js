@@ -4,7 +4,7 @@
 const Broker = require('../../packages/eueuq-broker');
 const Producer = require('../../packages/eueuq-producer');
 const Consumer = require('../../packages/eueuq-consumer');
-const _getUri = require('../helpers/get-uri.helper');
+const _getUri = require('../../packages/eueuq-core/test/helpers/get-uri.helper');
 
 test('instantiates a broker', () => {
   const broker = new Broker();

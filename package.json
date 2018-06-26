@@ -8,7 +8,7 @@
   },
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
   "scripts": {
-    "test": "node_modules/.bin/jest packages/*/test",
+    "test": "node_modules/.bin/jest --detectOpenHandles",
     "lint": "node_modules/.bin/eslint packages/*/lib/**/*.js packages/*/test/**/*.js",
     "watch": "DEBUG=eueuq* node_modules/.bin/jest packages/*/test --watch"
   },

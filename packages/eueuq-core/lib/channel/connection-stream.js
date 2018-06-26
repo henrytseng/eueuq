@@ -34,6 +34,7 @@ module.exports = function ConnectionStream(port, host) {
     _debug(`Connected channel`);
     _connectionStream.next(MessageStream(socket));
   });
+  _server.unref();
 
   /**
    * Start listening

@@ -11,7 +11,9 @@ describe('ConnectionStream', () => {
 
     connectionStream.subscribe((observer) => {
       expect(observer).toBeTruthy();
-      done();
+      client.end();
     });
+
+    client.on('end', done);
   });
 });

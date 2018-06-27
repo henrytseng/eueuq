@@ -9,9 +9,11 @@ describe('ConnectionStream', () => {
 
     let client = net.createConnection({ port });
 
-    connectionStream.subscribe((observer) => {
+    connectionStream.listen();
+    connectionStream.connection$().subscribe((observer) => {
       expect(observer).toBeTruthy();
       client.end();
+      connectionStream.close();
     });
 
     client.on('end', done);

@@ -11,4 +11,6 @@ const Config = require('eueuq-core').Config;
 module.exports = function Producer(config) {
   const _config = Config(config, process.env);
   const _uri = _config.connectionUri;
+
+  return {};
 };

@@ -33,11 +33,11 @@ module.exports = function Broker(config) {
       },
 
       /**
-       * Receive from incoming channel streams
+       * Message stream subject
        *
-       * @return {ChannelStream} A message stream
+       * @return {Observable<ChannelStream>} A message stream
        */
-      messages: () => {
+      message$: () => {
         return ConnectionStream(_uri.port, _uri.hostname);
       },
 

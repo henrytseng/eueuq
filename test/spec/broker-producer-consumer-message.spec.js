@@ -7,19 +7,19 @@ const Consumer = require('../../packages/eueuq-consumer');
 const _getUri = require('../../packages/eueuq-core/test/helpers/get-uri.helper');
 
 test('instantiates a broker', () => {
-  const broker = new Broker();
+  const broker = new Broker(_getUri());
 
   expect(broker).toBeTruthy();
 });
 
 test('instantiates a producer', () => {
-  const producer = new Producer('eueuq://localhost:5031', { cipherKey: 'JKfoh2ihdjsdiwn' });
+  const producer = new Producer(_getUri(), { cipherKey: 'JKfoh2ihdjsdiwn' });
 
   expect(producer).toBeTruthy();
 });
 
 test('instantiates a consumer', () => {
-  const consumer = new Consumer('eueuq://localhost:5031', { cipherKey: 'HJfhi29dhjvcnmd' });
+  const consumer = new Consumer(_getUri(), { cipherKey: 'HJfhi29dhjvcnmd' });
 
   expect(consumer).toBeTruthy();
 });
@@ -29,12 +29,12 @@ test('connects a consumer to a broker broker', (done) => {
   const broker = Broker(uri);
   const config = { cipherKey: broker.getCipherKey() };
 
-  // const producer = Producer(uri, config);
-  // const consumer = Consumer(uri, config);
-
-  let messageStream = broker.messages();
+  const producer = Producer(uri, config);
+  const consumer = Consumer(uri, config);
 
 
   expect(broker).toBeTruthy();
+  expect(producer).toBeTruthy();
+  expect(consumer).toBeTruthy();
   done();
 });

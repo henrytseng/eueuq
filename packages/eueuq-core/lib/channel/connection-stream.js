@@ -5,10 +5,10 @@ const net = require('net');
 const debug = require('debug')('eueuq:core:channel:connections');
 const uuidv4 = require('uuid/v4');
 const { Subject, fromEvent } = require('rxjs');
-const { filter, delay, take } = require('rxjs/operators');
+const { filter, delay, take, takeUntil } = require('rxjs/operators');
 
 const MessageStream = require('./message-stream');
-const signalInterupt = require('../shutdown/signal-interupt');
+const signalInterupt$ = require('../shutdown/signal-interupt');
 
 const MAX_RETRY_LISTENING = 5;
 const RETRY_DELAY = 1000;
@@ -18,7 +18,7 @@ const RETRY_DELAY = 1000;
  */
 module.exports = function ConnectionStream(port, host) {
   const _serverId = uuidv4();
-  const _connectionStream = new Subject();
+  const _connection$ = new Subject();
 
   /**
    * Internal debug method
@@ -32,9 +32,8 @@ module.exports = function ConnectionStream(port, host) {
   // Server instance
   const _server = net.createServer((socket) => {
     _debug(`Connected channel`);
-    _connectionStream.next(MessageStream(socket));
+    _connection$.next(MessageStream(socket));
   });
-  _server.unref();
 
   /**
    * Start listening
@@ -45,26 +44,46 @@ module.exports = function ConnectionStream(port, host) {
     });
   }
 
-  // Server error
-  const _retryAttempt = (new Subject()).pipe(delay(RETRY_DELAY), take(MAX_RETRY_LISTENING));
-  const _serverError = fromEvent(_server, 'error').pipe(filter((err) => err.code == 'EADDRINUSE'));
+  /**
+   * Stop server
+   */
+  function _stopListening() {
+    _server.unref();
+    _server.close();
+  }
 
-  _serverError.subscribe((err) => {
+  // Server error
+  const _retryAttempt$ = (new Subject()).pipe(delay(RETRY_DELAY), take(MAX_RETRY_LISTENING));
+  const _serverError$ = fromEvent(_server, 'error').pipe(filter((err) => err.code == 'EADDRINUSE'));
+
+  _serverError$.subscribe((err) => {
     _debug(`Encountered error acquiring port:${port}`);
-    _retryAttempt.next(err);
+    _retryAttempt$.next(err);
   });
 
   // Attempt retry
-  _retryAttempt.subscribe(() => {
+  _retryAttempt$.subscribe(() => {
     _startListening();
   });
 
   // Graceful shutdown
-  signalInterupt.subscribe(() => {
-    _server.close();
+  signalInterupt$.subscribe(() => {
+    _stopListening();
   });
 
-  _startListening();
+  return {
 
-  return _connectionStream;
+    listen: _startListening,
+
+    /**
+     * Connection stream subject
+     *
+     * @return {Observable<MessageStream>} A connection stream
+     */
+    connection$: () => {
+      return _connection$;
+    },
+
+    close: _stopListening
+  };
 };

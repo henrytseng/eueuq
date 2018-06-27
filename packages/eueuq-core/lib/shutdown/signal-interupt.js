@@ -11,21 +11,21 @@ const debug = require('debug')('eueuq:core');
  * @return {EventEmitter} A broadcaster for shutdown event request
  */
 function SignalInterupt() {
-  const _sigintStream = fromEvent(process, 'SIGINT');
-  const _forcedShutStream = _sigintStream.pipe(skip(1));
+  const _sigint$ = fromEvent(process, 'SIGINT');
+  const _forcedShutdown$ = _sigint$.pipe(skip(1));
 
   // Attempted shutdown
-  _sigintStream.subscribe(() => {
+  _sigint$.subscribe(() => {
     debug('Attempting shutdown');
   });
 
   // Forced shutdown
-  _forcedShutStream.subscribe(() => {
+  _forcedShutdown$.subscribe(() => {
     debug('Shutdown forced');
     process.exit(1);
   });
 
-  return _sigintStream.pipe(take(1));
+  return _sigint$.pipe(take(1));
 }
 
 module.exports = SignalInterupt();

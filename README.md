@@ -19,3 +19,29 @@ Work in progress.
 * Batch jobs
 * Progress tracking
 * Dashboard GUI
+
+
+
+## Build
+
+Install dependencies, this project uses yarn to manage dependencies
+
+```
+yarn install
+```
+
+Build files
+
+```
+yarn prepare
+```
+
+
+
+## Testing
+
+Run tests with
+
+```
+yarn test
+```

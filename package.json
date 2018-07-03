@@ -1,6 +1,7 @@
 {
   "name": "eueuq",
   "version": "0.0.2",
+  "private": true,
   "description": "A flexible messaging queue with priority handling",
   "repository": {
     "type": "git",
@@ -31,10 +32,14 @@
   "devDependencies": {
     "eslint": "^4.19.1",
     "jest": "^23.1.0",
-    "lerna": "^2.11.0"
+    "lerna": "^2.11.0",
+    "yarn": "^1.7.0"
   },
   "engines": {
     "node": ">= 6.x <= 9.x",
     "npm": ">= 2.x <= 5.x"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

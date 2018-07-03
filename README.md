@@ -1,5 +1,7 @@
 # eueuq
 
+[![Build Status](https://travis-ci.org/henrytseng/eueuq.svg?branch=master)](https://travis-ci.org/henrytseng/eueuq)
+
 > A flexible messaging queue with priority
 
 Work in progress.
@@ -17,4 +19,3 @@ Work in progress.
 * Batch jobs
 * Progress tracking
 * Dashboard GUI
-

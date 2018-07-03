@@ -10,10 +10,9 @@
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "start": "DEBUG=eueuq* packages/eueuq-broker/bin/eueuq",
+    "prepare": "lerna run prepare",
     "test": "lerna run test",
-    "lint": "node_modules/.bin/eslint packages/*/lib/**/*.js packages/*/test/**/*.js",
-    "watch": "DEBUG=eueuq* node_modules/.bin/jest packages/*/test --detectOpenHandles --watch"
+    "clean": "rimraf packages/**/lib"
   },
   "keywords": [
     "worker",

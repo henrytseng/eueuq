@@ -11,7 +11,8 @@
   "scripts": {
     "start": "bin/eueuq",
     "lint": "node_modules/.bin/eslint lib",
-    "test": "node_modules/.bin/jest"
+    "test": "DEBUG=eueuq* node_modules/.bin/jest",
+    "watch": "DEBUG=eueuq* node_modules/.bin/jest --watch"
   },
   "keywords": [
     "broker",

@@ -1,6 +1,7 @@
 {
   "name": "eueuq-core",
   "version": "0.0.2",
+  "private": true,
   "description": "eueuq message core",
   "repository": "https://github.com/henrytseng/eueuq/tree/master/packages/eueuq-core",
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",

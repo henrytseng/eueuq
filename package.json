@@ -9,10 +9,8 @@
   },
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "prepare": "lerna run prepare",
-    "test": "lerna run test",
-    "clean": "rimraf packages/**/lib"
+    "lint": "lerna run lint",
+    "test": "lerna run test"
   },
   "keywords": [
     "worker",

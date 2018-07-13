@@ -10,7 +10,8 @@
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
   "scripts": {
     "lint": "lerna run lint",
-    "test": "lerna run test"
+    "test": "DEBUG=eueuq* node_modules/.bin/jest",
+    "watch": "DEBUG=eueuq* node_modules/.bin/jest --watch"
   },
   "keywords": [
     "worker",

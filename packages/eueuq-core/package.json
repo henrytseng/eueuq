@@ -37,6 +37,7 @@
     "rxjs": "^6.2.1"
   },
   "devDependencies": {
+    "faker": "^4.1.0",
     "sinon": "^5.0.10"
   }
 }

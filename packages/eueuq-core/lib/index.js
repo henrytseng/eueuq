@@ -1,7 +1,7 @@
 module.exports = {
   Action: require('./action'),
   Config: require('./config'),
-  ConnectionStream: require('./channel/connection-stream'),
+  Channel: require('./channel'),
   errors: {
     ConfigurationError: require('./errors/configuration-error'),
     ConnectionError: require('./errors/connection-error')

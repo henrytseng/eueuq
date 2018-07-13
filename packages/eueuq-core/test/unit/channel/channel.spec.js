@@ -1,19 +1,19 @@
-const ConnectionStream = require('../../../lib/channel/connection-stream');
+const Channel = require('../../../lib/channel');
 const _getUri = require('../../helpers/get-uri.helper');
 const net = require('net');
 
-describe('ConnectionStream', () => {
+describe('Channel', () => {
   test('connect server and disconnect client', (done) => {
     const port = _getUri.getPort();
-    const connectionStream = ConnectionStream(port);
+    const channel = Channel(port);
 
     let client = net.createConnection({ port });
 
-    connectionStream.listen();
-    connectionStream.connection$().subscribe((observer) => {
+    channel.listen();
+    channel.connection$().subscribe((observer) => {
       expect(observer).toBeTruthy();
       client.end();
-      connectionStream.close();
+      channel.close();
     });
 
     client.on('end', done);

@@ -4,11 +4,14 @@
 const debug = require('debug')('eueuq:core:channel:messages');
 const uuidv4 = require('uuid/v4');
 const { Subject, fromEvent } = require('rxjs');
+const { buffer, map } = require('rxjs/operators');
+
+const EOL = "\n";
 
 module.exports = function MessageStream(socket) {
   const _socketId = uuidv4();
-  const _dataStream = new fromEvent(socket, 'data');
-  const _messageStream = new Subject();
+  const _completion$ = new Subject();
+  const _message$ = new Subject().pipe(buffer(_completion$), map((i) => i.join('')));
 
   /**
    * Internal debug method
@@ -19,45 +22,23 @@ module.exports = function MessageStream(socket) {
     return debug(`[${_socketId}] ${message}`);
   }
 
-  _dataStream.subscribe((buffer) => {
+  // Send completed chunks
+  const _socketData$ = new fromEvent(socket, 'data');
+  _socketData$.subscribe((data) => {
+    _debug(`Received data ${data.length}`);
 
+    let nextBuf = data;
+    let i;
+    while((i = nextBuf.indexOf(EOL, 'utf8')) != -1) {
+      let prevBuf = nextBuf.slice(0, i);
+      nextBuf = nextBuf.slice(i + EOL.length);
+      _message$.next(prevBuf);
+      _completion$.next(i);
+    }
+    _message$.next(nextBuf);
   });
 
 
-
-  _messageStream.subscribe(() => {
-
-  });
-
-  //
-  //
-  //   let _bufferList = [];
-  //
-  //   socket.on('data', (buffer) => {
-  //     _debug(`Received data ${buffer.length}`);
-  //     let i;
-  //     let k;
-  //     let lastBuf;
-  //     let nextBuf = buffer;
-  //     let completedList;
-  //
-  //     // Limit looping for debugging
-  //     for(k=0; (i=nextBuf.indexOf(EOL, 'utf8')) !== -1; k++) {
-  //       lastBuf = nextBuf.slice(0, i);
-  //       nextBuf = nextBuf.slice(i + EOL.length);
-  //
-  //       // Finish last
-  //       _debug(`Message collected`);
-  //       completedList = _bufferList;
-  //       completedList.push(lastBuf);
-  //
-  //       _channel.onMessage(Buffer.concat(completedList));
-  //
-  //       _bufferList = [];
-  //     }
-  //
-  //     _bufferList.push(nextBuf);
-  //   });
   //   socket.on('error', (err) => {
   //     _debug(`Encountered error: ${err.message}`);
   //     _bufferList = [];
@@ -70,5 +51,5 @@ module.exports = function MessageStream(socket) {
   //   });
   // });
   //
-  return _messageStream;
+  return _message$;
 };

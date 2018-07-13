@@ -1,10 +1,10 @@
 module.exports = {
-  Action: require('./lib/action'),
-  Config: require('./lib/config'),
-  ConnectionStream: require('./lib/channel/connection-stream'),
+  Action: require('./action'),
+  Config: require('./config'),
+  ConnectionStream: require('./channel/connection-stream'),
   errors: {
-    ConfigurationError: require('./lib/errors/configuration-error'),
-    ConnectionError: require('./lib/errors/connection-error')
+    ConfigurationError: require('./errors/configuration-error'),
+    ConnectionError: require('./errors/connection-error')
   },
-  signalInterupt: require('./lib/shutdown/signal-interupt')
+  signalInterupt: require('./shutdown/signal-interupt')
 };

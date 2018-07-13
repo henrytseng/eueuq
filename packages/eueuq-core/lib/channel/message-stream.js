@@ -25,7 +25,7 @@ module.exports = function MessageStream(socket) {
   // Send completed chunks
   const _socketData$ = new fromEvent(socket, 'data');
   _socketData$.subscribe((data) => {
-    _debug(`Received data ${data.length}`);
+    _debug(`Received data length:${data.length}`);
 
     let nextBuf = data;
     let i;

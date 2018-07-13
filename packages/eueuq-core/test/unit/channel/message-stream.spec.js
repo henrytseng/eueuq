@@ -19,7 +19,6 @@ describe('MessageStream', () => {
     });
 
     // Check reformed messages
-    console.log(recombined);
     expect(recombined[0]).toEqual("dolor sedlorem");
     expect(recombined[1]).toEqual("ipsum sed ut");
 

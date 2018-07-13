@@ -4,7 +4,7 @@
   "description": "eueuq message producer",
   "repository": "https://github.com/henrytseng/eueuq/tree/master/packages/eueuq-producer",
   "author": "Henry Tseng <info@heycanvas.com> (http://www.heycanvas.com/)",
-  "main": "./index",
+  "main": "lib/index",
   "scripts": {
     "lint": "node_modules/.bin/eslint lib",
     "test": "DEBUG=eueuq* node_modules/.bin/jest",

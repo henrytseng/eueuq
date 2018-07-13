@@ -7,7 +7,7 @@
   "bin": {
     "eueuq": "bin/eueuq"
   },
-  "main": "./index",
+  "main": "lib/index",
   "scripts": {
     "start": "bin/eueuq",
     "lint": "node_modules/.bin/eslint lib",

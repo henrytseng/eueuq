@@ -8,8 +8,16 @@ describe('MessageStream', () => {
 
     // Recombined
     let recombined = [];
-    message$.subscribe((data) => {
-      recombined.push(data);
+    message$.subscribe({
+      next: (data) => {
+        recombined.push(data);
+      },
+      complete: () => {
+        done();
+      },
+      error: (err) => {
+        expect(err).toBeUndefined();
+      }
     });
 
     // Build payload
@@ -22,6 +30,6 @@ describe('MessageStream', () => {
     expect(recombined[0]).toEqual("dolor sedlorem");
     expect(recombined[1]).toEqual("ipsum sed ut");
 
-    done();
+    message$.complete();
   });
 });

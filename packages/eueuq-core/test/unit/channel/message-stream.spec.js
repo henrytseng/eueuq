@@ -54,7 +54,10 @@ describe('MessageStream', () => {
     // Build payload
     socket.emit('error', new Error('Generic error'));
 
-    // Does not get emitted
+    // Does not send data
+    socket.emit('data', 'Lorem ipsum');
+
+    // Does not complete
     socket.emit('end');
   });
 });

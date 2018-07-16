@@ -23,6 +23,7 @@ const RETRY_DELAY = 1000;
 module.exports = function Channel(port, hostname) {
   const _serverId = uuidv4();
   const _connection$ = new Subject();
+  let _retryAttempt$;
 
   /**
    * Internal debug method
@@ -36,7 +37,10 @@ module.exports = function Channel(port, hostname) {
   // Server instance
   const _server = net.createServer((socket) => {
     _debug(`Connected channel`);
-    _connection$.next(MessageStream(socket));
+    _connection$.next({
+      serverId: _serverId,
+      message$: MessageStream(socket)
+    });
   });
 
   /**
@@ -55,6 +59,8 @@ module.exports = function Channel(port, hostname) {
   function _stopListening() {
     _server.unref();
     _server.close();
+    _connection$.complete();
+    _retryAttempt$.complete();
   }
 
   // Server errors
@@ -62,7 +68,7 @@ module.exports = function Channel(port, hostname) {
     .pipe(filter((err) => err.code == 'EADDRINUSE'));
 
   // Retry attempts
-  const _retryAttempt$ = (new Subject())
+  _retryAttempt$ = (new Subject())
     .pipe(delay(RETRY_DELAY), take(MAX_RETRY_LISTENING));
   _serverError$.subscribe((err) => {
     _debug(`Encountered error acquiring port:${port}`);

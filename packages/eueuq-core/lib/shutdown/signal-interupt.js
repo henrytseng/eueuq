@@ -2,7 +2,7 @@
  * Module dependencies
  */
 const { fromEvent } = require('rxjs');
-const { skip, take } = require('rxjs/operators');
+const { skip, take, merge } = require('rxjs/operators');
 const debug = require('debug')('eueuq:core');
 
 /**
@@ -12,7 +12,10 @@ const debug = require('debug')('eueuq:core');
  */
 function SignalInterupt() {
   const _sigint$ = fromEvent(process, 'SIGINT');
-  const _forcedShutdown$ = _sigint$.pipe(skip(1));
+  const _unexpected$ = fromEvent(process, 'uncaughtException');
+  const _forcedShutdown$ = _unexpected$.pipe(merge(
+    _sigint$.pipe(skip(1))
+  ));
 
   // Attempted shutdown
   _sigint$.subscribe(() => {
@@ -26,12 +29,11 @@ function SignalInterupt() {
   });
 
   // Attempt graceful shutdown after uncaught errors
-  process.on('uncaughtException', (err) => {
-    debug('Uncaught exception');
-    _sigint$.error(err);
+  _unexpected$.subscribe((err) => {
+    debug('Uncaught exception', err);
   });
 
-  return _sigint$.pipe(take(1));
+  return _forcedShutdown$.pipe(take(1));
 }
 
 module.exports = SignalInterupt();

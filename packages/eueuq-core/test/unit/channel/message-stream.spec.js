@@ -30,6 +30,31 @@ describe('MessageStream', () => {
     expect(recombined[0]).toEqual("dolor sedlorem");
     expect(recombined[1]).toEqual("ipsum sed ut");
 
-    message$.complete();
+    socket.emit('end');
+  });
+
+  test('handle subscription errors', (done) => {
+    const socket = new EventEmitter();
+    const message$ = MessageStream(socket);
+
+    // End only on error
+    message$.subscribe({
+      next: (data) => {
+        expect('Should not occur').toBeFalsy();
+      },
+      complete: () => {
+        expect('Should not occur').toBeFalsy();
+      },
+      error: (err) => {
+        expect(err).toBeTruthy();
+        done();
+      }
+    });
+
+    // Build payload
+    socket.emit('error', new Error('Generic error'));
+
+    // Does not get emitted
+    socket.emit('end');
   });
 });

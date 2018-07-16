@@ -23,33 +23,42 @@ module.exports = function MessageStream(socket) {
   }
 
   // Send completed chunks
-  const _socketData$ = new fromEvent(socket, 'data');
-  _socketData$.subscribe((data) => {
-    _debug(`Received data length:${data.length}`);
+  const _dataData$ = new fromEvent(socket, 'data');
+  const _dataSubscription = _dataData$.subscribe({
+    next: (data) => {
+      _debug(`Received data length:${data.length}`);
 
-    let nextBuf = data;
-    let i;
-    while((i = nextBuf.indexOf(EOL, 'utf8')) != -1) {
-      let prevBuf = nextBuf.slice(0, i);
-      nextBuf = nextBuf.slice(i + EOL.length);
-      _message$.next(prevBuf);
-      _completion$.next(i);
+      let nextBuf = data;
+      let i;
+      while((i = nextBuf.indexOf(EOL, 'utf8')) != -1) {
+        let prevBuf = nextBuf.slice(0, i);
+        nextBuf = nextBuf.slice(i + EOL.length);
+        _message$.next(prevBuf);
+        _completion$.next(i);
+      }
+      _message$.next(nextBuf);
+    },
+    error: (err) => {
+      _message$.error(err);
+    },
+    complete: () => {
+      _debug.log('complete');
     }
-    _message$.next(nextBuf);
   });
 
+  // Error
+  socket.on('error', (err) => {
+    _debug(`Socket connection error ocurred ${err}`);
+    _message$.error(err);
+  });
 
-  //   socket.on('error', (err) => {
-  //     _debug(`Encountered error: ${err.message}`);
-  //     _bufferList = [];
-  //     _channel.onError(err);
-  //   });
-  //   socket.on('end', () => {
-  //     _debug(`Disconnected`);
-  //     _bufferList = [];
-  //     _channel.onEnd();
-  //   });
-  // });
-  //
+  // end
+  socket.on('end', () => {
+    _debug(`Disconnected`);
+    _message$.complete();
+    _completion$.complete();
+    _dataSubscription.unsubscribe();
+  });
+
   return _message$;
 };

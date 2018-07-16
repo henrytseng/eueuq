@@ -8,10 +8,18 @@ const { buffer, map } = require('rxjs/operators');
 
 const EOL = "\n";
 
+/**
+ * A meesage stream
+ *
+ * @param  {net.Socket}         socket A socket connection
+ * @return {Observable<Buffer>}        A message Buffer object
+ */
 module.exports = function MessageStream(socket) {
   const _socketId = uuidv4();
-  const _completion$ = new Subject();
-  const _message$ = new Subject().pipe(buffer(_completion$), map((i) => i.join('')));
+  const _bufferedCompletion$ = new Subject();
+  const _message$ = new Subject().pipe(buffer(_bufferedCompletion$), map((i) => {
+    return Buffer.concat(i);
+  }));
 
   /**
    * Internal debug method
@@ -34,7 +42,7 @@ module.exports = function MessageStream(socket) {
         let prevBuf = nextBuf.slice(0, i);
         nextBuf = nextBuf.slice(i + EOL.length);
         _message$.next(prevBuf);
-        _completion$.next(i);
+        _bufferedCompletion$.next(i);
       }
       _message$.next(nextBuf);
     },
@@ -42,7 +50,7 @@ module.exports = function MessageStream(socket) {
       _message$.error(err);
     },
     complete: () => {
-      _debug.log('complete');
+      _debug.log('Complete');
     }
   });
 
@@ -50,13 +58,15 @@ module.exports = function MessageStream(socket) {
   socket.on('error', (err) => {
     _debug(`Socket connection error ocurred ${err}`);
     _message$.error(err);
+    _bufferedCompletion$.complete();
+    _dataSubscription.unsubscribe();
   });
 
   // end
   socket.on('end', () => {
     _debug(`Disconnected`);
     _message$.complete();
-    _completion$.complete();
+    _bufferedCompletion$.complete();
     _dataSubscription.unsubscribe();
   });
 

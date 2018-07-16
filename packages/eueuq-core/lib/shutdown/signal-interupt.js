@@ -25,6 +25,12 @@ function SignalInterupt() {
     process.exit(1);
   });
 
+  // Attempt graceful shutdown after uncaught errors
+  process.on('uncaughtException', (err) => {
+    debug('Uncaught exception');
+    _sigint$.error(err);
+  });
+
   return _sigint$.pipe(take(1));
 }
 

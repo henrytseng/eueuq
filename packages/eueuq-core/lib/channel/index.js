@@ -14,7 +14,7 @@ const MAX_RETRY_LISTENING = 5;
 const RETRY_DELAY = 1000;
 
 /**
- * A factory method for message streams
+ * A conduit for message streams
  *
  * @param {Number} port       A port number
  * @param {String} [hostname] A optional hostname

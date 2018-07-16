@@ -57,6 +57,7 @@ module.exports = function Channel(port, hostname) {
    * Stop server
    */
   function _stopListening() {
+    _debug('Closing channel');
     _server.unref();
     _server.close();
     _connection$.complete();

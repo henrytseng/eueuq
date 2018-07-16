@@ -6,7 +6,7 @@ const uuidv1 = require('uuid/v1');
 
 const Config = require('eueuq-core').Config;
 const Action = require('eueuq-core').Action;
-const ConnectionStream = require('eueuq-core').ConnectionStream;
+const Channel = require('eueuq-core').Channel;
 
 /**
  * A factory method to produce message brokers
@@ -35,10 +35,10 @@ module.exports = function Broker(config) {
       /**
        * Message stream subject
        *
-       * @return {Observable<ChannelStream>} A message stream
+       * @return {Observable<ChannelServer>} A message stream
        */
       message$: () => {
-        return ConnectionStream(_uri.port, _uri.hostname);
+        return Channel(_uri.port, _uri.hostname).listen();
       },
 
       /**

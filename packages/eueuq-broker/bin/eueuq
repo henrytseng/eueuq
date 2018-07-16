@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const Broker = require('../lib/broker');
+const Broker = require('../lib/index');
 
-var broker = new Broker();
-broker.message$().listen();
+const _broker = new Broker();
+_broker.message$();

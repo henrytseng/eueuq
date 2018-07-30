@@ -13,8 +13,19 @@ const { URL } = require('url');
 module.exports = function Config(config, env) {
   const _env = env || {};
   const _config = Object.assign({
+
+    // Message encryption cipher key
     cipherKey: _env.EUEUQ_CIPHER_KEY,
-    connectionUri: new URL(_env.EUEUQ_BROKER_URI || 'eueuq://localhost:5031')
+
+    // Conenction URI
+    connectionUri: new URL(_env.EUEUQ_BROKER_URI || 'eueuq://localhost:5031'),
+
+    // Service open retry attempts
+    maxServerRetryAttempt: 5,
+
+    // Service re-open retry delay
+    serverRetryDelay: 1000
+
   }, config || {});
 
   // Configuration

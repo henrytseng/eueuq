@@ -1,25 +1,31 @@
 /**
  * Module dependencies
  */
-const debug = require('debug')('eueuq:core:channel:messages');
+const debug = require('debug')('eueuq:core:channel:incoming');
 const uuidv4 = require('uuid/v4');
 const { Subject, fromEvent } = require('rxjs');
 const { buffer, map } = require('rxjs/operators');
-
-const EOL = "\n";
+const Config = require('../config');
+const Message = require('./message');
 
 /**
- * A meesage stream
+ * An incoming-outgoing message stream
  *
- * @param  {net.Socket}         socket A socket connection
- * @return {Observable<Buffer>}        A message Buffer object
+ * @param  {net.Socket}         socket    A socket connection
+ * @param  {String}             channelId A channel id
+ * @param  {Config}             [config]  A configuration object
+ * @return {Observable<Buffer>}           A message stream
  */
-module.exports = function MessageStream(socket) {
-  const _socketId = uuidv4();
+module.exports = function IncomingMessageStream(socket, channelId, config) {
+  const _channelId = channelId || uuidv4();
+  const _config = Config(config, process.env);
   const _bufferedCompletion$ = new Subject();
-  const _message$ = new Subject().pipe(buffer(_bufferedCompletion$), map((i) => {
-    return Buffer.concat(i);
-  }));
+
+  // Build message stream from stream of Array<Buffer>
+  const _message$ = new Subject().pipe(
+    buffer(_bufferedCompletion$),
+    map((i) => Array.isArray(i) ? Buffer.concat(i) : i)
+  );
 
   /**
    * Internal debug method
@@ -27,20 +33,20 @@ module.exports = function MessageStream(socket) {
    * @param  {String} message A message payload
    */
   function _debug(message) {
-    return debug(`[${_socketId}] ${message}`);
+    return debug(`[${_channelId}] ${message}`);
   }
 
   // Send completed chunks
-  const _dataData$ = new fromEvent(socket, 'data');
-  const _dataSubscription = _dataData$.subscribe({
+  const _data$ = new fromEvent(socket, 'data');
+  const _dataSubscription = _data$.subscribe({
     next: (data) => {
       _debug(`Received data length:${data.length}`);
 
       let nextBuf = data;
       let i;
-      while((i = nextBuf.indexOf(EOL, 'utf8')) != -1) {
+      while((i = nextBuf.indexOf(Message.EOL, 'utf8')) != -1) {
         let prevBuf = nextBuf.slice(0, i);
-        nextBuf = nextBuf.slice(i + EOL.length);
+        nextBuf = nextBuf.slice(i + Message.EOL.length);
         _message$.next(prevBuf);
         _bufferedCompletion$.next(i);
       }

@@ -1,5 +1,5 @@
 const Channel = require('../../../lib/channel');
-const _getUri = require('../../helpers/get-uri.helper');
+const _getUri = require('../../../../../test/helpers/get-uri.helper');
 const net = require('net');
 const sinon = require('sinon');
 
@@ -35,5 +35,13 @@ describe('Channel', () => {
       done();
     });
 
+  });
+
+  test('closed channel no longer sends', (done) => {
+    done();
+  });
+
+  test('closed channel no longer receives', (done) => {
+    done();
   });
 });

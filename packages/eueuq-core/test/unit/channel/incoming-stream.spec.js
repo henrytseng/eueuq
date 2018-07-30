@@ -1,12 +1,13 @@
-const MessageStream = require('../../../lib/channel/message-stream');
+const IncomingStream = require('../../../lib/channel/incoming-stream');
+const Message = require('../../../lib/channel/message');
 const EventEmitter = require('events').EventEmitter;
 const crypto = require('crypto');
 const {crc32} = require('crc');
 
-describe('MessageStream', () => {
+describe('IncomingStream', () => {
   test('message stream data dispatched', (done) => {
     const socket = new EventEmitter();
-    const message$ = MessageStream(socket);
+    const message$ = IncomingStream(socket);
 
     // Recombined
     let recombined = [];
@@ -23,7 +24,7 @@ describe('MessageStream', () => {
     });
 
     // Build payload
-    let payload = ["dolor sed", "lorem\nipsum ", "sed ut", "\n"];
+    let payload = [`dolor sed`, `lorem${Message.EOL}ipsum `, `sed ut`, `${Message.EOL}`];
     payload.map((data) => {
       socket.emit('data', Buffer.from(data));
     });
@@ -37,7 +38,7 @@ describe('MessageStream', () => {
 
   test('reasonable response rate for large messages', (done) => {
     const socket = new EventEmitter();
-    const message$ = MessageStream(socket);
+    const message$ = IncomingStream(socket);
 
     // Recombined
     let recombined = [];
@@ -59,7 +60,7 @@ describe('MessageStream', () => {
       let gram = crypto.randomBytes(1024 * 1024).toString('base64');
       payload.push(gram);
     }
-    payload.push("\n");
+    payload.push(Message.EOL);
     payload.forEach((data) => socket.emit('data', Buffer.from(data)));
 
     // Check sent is received
@@ -75,7 +76,7 @@ describe('MessageStream', () => {
 
   test('handle subscription errors', (done) => {
     const socket = new EventEmitter();
-    const message$ = MessageStream(socket);
+    const message$ = IncomingStream(socket);
 
     // End only on error
     message$.subscribe({
